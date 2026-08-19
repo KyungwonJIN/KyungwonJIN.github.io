@@ -10,7 +10,7 @@
 
 <header class="topbar">
   <div class="wrap">
-    <div class="who"><a href="/">&larr; 진경원 <span>Vision AI</span></a></div>
+    <a class="brand" href="/">&larr; kwjin.dev</a>
     <nav class="navlinks" aria-label="다른 프로젝트">
       <a href="/projects/device-detection/">촬영기기 탐지</a>
       <a href="/projects/xray/">X-ray 탐지</a>
@@ -121,7 +121,7 @@
   <div class="blocks">
 
     <div class="block">
-      <h4>1. 모델 세대교체 — 후보 74종 비교</h4>
+      <h4><span class="bn">01 &mdash;</span> 모델 세대교체 — 후보 74종 비교</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>운영 모델이 몇 세대 전 구조에 머물러 있었고, 어떤 최신 모델이 실제 도메인에서 나은지에 대한 근거가 없었습니다.</p></div>
         <div><span class="tag">접근</span><p>후보 <b>74종</b>을 3개 벤치마크로 교차 비교해 도메인별 최적 모델을 선정했습니다. 과정에서 <b>학습–벤치 데이터 유출을 콘텐츠 해시로 적발</b>하고 클린 벤치를 재구축했습니다. 2단 추론(TTA)은 미탐을 줄이는 대신(<b>recall +4.5 pt</b>) 추론이 <b>2배</b> 느려지는 트레이드오프를 실측했습니다.</p></div>
@@ -130,7 +130,7 @@
     </div>
 
     <div class="block">
-      <h4>2. 실배포 형상 전수 검증</h4>
+      <h4><span class="bn">02 &mdash;</span> 실배포 형상 전수 검증</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>벤치마크 수치는 대개 pt 원본 · 단일 추론 기준으로 측정됩니다. 실제 고객 환경에 나가는 것은 INT8 양자화 + 2단 추론 형상이라, 두 수치가 같다는 보장이 없었습니다.</p></div>
         <div><span class="tag">접근</span><p>배포되는 형상 그대로 — <b>INT8 양자화 + 2단 추론</b> — 전수 검증을 수행했습니다.</p></div>
@@ -139,7 +139,7 @@
     </div>
 
     <div class="block">
-      <h4>3. 태블릿 오탐 2차 검증기 설계·배포</h4>
+      <h4><span class="bn">03 &mdash;</span> 태블릿 오탐 2차 검증기 설계·배포</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>모니터를 태블릿으로 오인식하는 유형이 탐지 모델 단독으로는 잘 줄지 않았습니다. 오탐이 곧 비용인 시스템이라 평균 정확도가 아니라 <b>운용 오탐률에서의 실탐지율</b>이 기준이 되어야 했습니다.</p></div>
         <div><span class="tag">접근</span><p>기하 프라이어 · 임베딩 · 경량 분류기 <b>3안을 비교 설계</b>해 경량 분류기를 채택했습니다. 성능을 확정하기 전 자체 감사에서 <b>평가셋의 장면 수준 근중복 유출</b>을 적발했고, 클린 스플릿으로 재측정한 뒤에야 수치를 확정했습니다.</p></div>
@@ -152,7 +152,7 @@
     </div>
 
     <div class="block">
-      <h4>4. VLM 활용성 평가 — 쓸 수 있나, 없나</h4>
+      <h4><span class="bn">04 &mdash;</span> VLM 활용성 평가 — 쓸 수 있나, 없나</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>대규모 자동검수에 VLM 제로샷 판정을 쓸 수 있는지 판단이 필요했습니다.</p></div>
         <div><span class="tag">접근</span><p>Qwen2.5-VL로 제로샷 판정 실험을 돌렸습니다. 초기 프롬프트('기기 여부')는 사실상 무작위 수준(AUROC <b>0.504</b>)이었는데, 질문을 <b>'촬영 가능한 렌즈면이 보이는가'</b>로 재정의하자 AUROC <b>0.762</b>로 반전했습니다 — 모델 능력이 아니라 질문 정의가 병목이었습니다.</p></div>
@@ -161,7 +161,7 @@
     </div>
 
     <div class="block">
-      <h4>5. 스마트글래스 탐지 융합 개선</h4>
+      <h4><span class="bn">05 &mdash;</span> 스마트글래스 탐지 융합 개선</h4>
       <p>
         스마트글래스는 형태가 일반 안경과 유사해 검출기 단독으로는 구분 성능에 한계가 있었습니다.
         검출 결과에 <b>DINOv2 임베딩</b>을 융합하는 구조로 F1 <b>0.816 → 0.841</b>로 개선했습니다.
@@ -169,7 +169,7 @@
     </div>
 
     <div class="block">
-      <h4>6. 3년 모델 자산 감사</h4>
+      <h4><span class="bn">06 &mdash;</span> 3년 모델 자산 감사</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>3년간 쌓인 학습 이력과 데이터셋이 어디에 어떻게 쓰였는지 추적이 끊겨 있었습니다. 어떤 데이터가 학습에 한 번도 들어가지 않았는지조차 알 수 없었습니다.</p></div>
         <div><span class="tag">접근</span><p>학습 <b>651개</b>를 전수 스캔하고, <b>MD5 콘텐츠 계보</b>로 데이터 사용 이력을 역추적해 복원했습니다.</p></div>
@@ -231,14 +231,11 @@
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
-      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
-    </div>
-    <div class="small">
-      진경원 · Vision AI Engineer<br />
-      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
-    </div>
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
   </div>
 </footer>
 

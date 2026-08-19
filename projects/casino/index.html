@@ -10,7 +10,7 @@
 
 <header class="topbar">
   <div class="wrap">
-    <div class="who"><a href="/">&larr; 진경원 <span>Vision AI</span></a></div>
+    <a class="brand" href="/">&larr; kwjin.dev</a>
     <nav class="navlinks" aria-label="다른 프로젝트">
       <a href="/projects/device-detection/">촬영기기 탐지</a>
       <a href="/projects/sprint/">집중 스프린트</a>
@@ -103,7 +103,7 @@
   <div class="blocks">
 
     <div class="block">
-      <h4>1. 사선 카메라 → 탑뷰 좌표계 변환</h4>
+      <h4><span class="bn">01 &mdash;</span> 사선 카메라 → 탑뷰 좌표계 변환</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>카메라가 테이블 위쪽 사선에 설치돼 있어, 어느 베팅 구역에 칩이 놓였는지 판정하려면 영상 좌표를 테이블 평면 좌표로 옮겨야 했습니다.</p></div>
         <div><span class="tag">접근</span><p>먼저 단일 <b>Homography</b>를 적용했지만, 베팅 영역이 곡면 형태라 가장자리에서 왜곡이 남았습니다. 평면 가정 자체가 맞지 않는 구간이었습니다. <b>keypoint 기반으로 영역을 먼저 검출</b>한 뒤 구간별로 <b>Piecewise Affine 변환</b>을 적용해 보정했습니다.</p></div>
@@ -112,7 +112,7 @@
     </div>
 
     <div class="block">
-      <h4>2. 칩 카운팅</h4>
+      <h4><span class="bn">02 &mdash;</span> 칩 카운팅</h4>
       <p>
         쌓인 칩은 옆면 줄무늬로 개수를 세야 하는데, 조명·각도·칩 색상에 따라 경계가 흐려집니다.
         단일 정답이 없는 문제라 <b>이진화</b>, <b>원통 펼치기(unwrapping)</b>, <b>line 검출</b> 등
@@ -121,7 +121,7 @@
     </div>
 
     <div class="block">
-      <h4>3. 라벨링 툴 자체 제작과 반복 사이클</h4>
+      <h4><span class="bn">03 &mdash;</span> 라벨링 툴 자체 제작과 반복 사이클</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>폐쇄망이라 외부 라벨링 서비스를 쓸 수 없었고, segmentation 라벨을 빠르게 만들 수단이 없었습니다.</p></div>
         <div><span class="tag">접근</span><p>segmentation <b>라벨링 툴을 자체 제작</b>하고, <b>[소량 라벨링 → 학습 → 추론 → 재라벨링]</b> 사이클을 운영했습니다. 모델이 만든 추론 결과를 수정하는 방식이라 라벨링 비용이 회차마다 줄어듭니다.</p></div>
@@ -130,7 +130,7 @@
     </div>
 
     <div class="block">
-      <h4>4. BMT · 데모</h4>
+      <h4><span class="bn">04 &mdash;</span> BMT · 데모</h4>
       <p>
         고객이 요구한 출력 포맷 대응까지 포함해 <b>BMT와 데모를 완료</b>했습니다.
         폐쇄망 조건에서 3주 만에 파이프라인 구축부터 시연까지 끝낸 결과가 다음 단계로 이어졌습니다.
@@ -138,7 +138,7 @@
     </div>
 
     <div class="block">
-      <h4>5. 스마트테이블 프로젝트로 확장 <span class="when">진행 중</span></h4>
+      <h4><span class="bn">05 &mdash;</span> 스마트테이블 프로젝트로 확장 <span class="when">진행 중</span></h4>
       <p>
         PoC 이후 <b>신규 고객사의 스마트테이블 프로젝트</b>로 확장됐습니다.
         칩·카드 인식 위에 행위 판정 레이어를 올리는 방향입니다.
@@ -203,14 +203,11 @@
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
-      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
-    </div>
-    <div class="small">
-      진경원 · Vision AI Engineer<br />
-      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
-    </div>
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
   </div>
 </footer>
 

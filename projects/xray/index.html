@@ -10,7 +10,7 @@
 
 <header class="topbar">
   <div class="wrap">
-    <div class="who"><a href="/">&larr; 진경원 <span>Vision AI</span></a></div>
+    <a class="brand" href="/">&larr; kwjin.dev</a>
     <nav class="navlinks" aria-label="다른 프로젝트">
       <a href="/projects/device-detection/">촬영기기 탐지</a>
       <a href="/projects/sprint/">집중 스프린트</a>
@@ -104,7 +104,7 @@
   <div class="blocks">
 
     <div class="block">
-      <h4>1. 데이터 누수 진단과 평가 체계 재구축</h4>
+      <h4><span class="bn">01 &mdash;</span> 데이터 누수 진단과 평가 체계 재구축</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>인수 시점 mAP50 <b>0.986</b> — 실환경 대비 과도하게 높은 수치.</p></div>
         <div><span class="tag">접근</span><p>데이터 구조를 추적해 <b>9-view 이미지의 train/test 교차 혼입</b>을 확인하고, 이미지 단위가 아닌 <b>장면(scene) 단위로 재분할</b>했습니다. 평가 단위도 이미지 1장이 아니라 <b>9-view 세트 판정</b>(실제 검색대에서 한 짐을 통과시키는 단위)으로 다시 정의했습니다.</p></div>
@@ -113,7 +113,7 @@
     </div>
 
     <div class="block">
-      <h4>2. 오라벨 필터링</h4>
+      <h4><span class="bn">02 &mdash;</span> 오라벨 필터링</h4>
       <p>
         재분할 후에도 학습이 흔들리는 구간이 남아, 라벨 자체를 검증했습니다.
         <b>box 크기와 종횡비 분포</b>를 클래스별로 검사해 물리적으로 불가능한 박스를 오라벨로 분류·제거했습니다.
@@ -121,7 +121,7 @@
     </div>
 
     <div class="block">
-      <h4>3. 9-view를 약점에서 강점으로 — Late Fusion 앙상블</h4>
+      <h4><span class="bn">03 &mdash;</span> 9-view를 약점에서 강점으로 — Late Fusion 앙상블</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>9-view는 누수의 원인이었지만, 동시에 이 데이터셋만의 구조적 특징이기도 했습니다. 각도에 따라 물체가 가려지거나 겹쳐 보이는 정도가 달라, 어떤 각도에서는 보이는 물체가 다른 각도에서는 보이지 않습니다.</p></div>
         <div><span class="tag">접근</span><p>9개 view의 탐지 결과를 <b>box 크기별 가중치 기반 late fusion</b>으로 통합했습니다. 큰 박스로 명확히 보인 view의 판정에 더 큰 신뢰를 주는 방식입니다.</p></div>
@@ -130,7 +130,7 @@
     </div>
 
     <div class="block">
-      <h4>4. 물성(Zeff) 채널 추가 실험</h4>
+      <h4><span class="bn">04 &mdash;</span> 물성(Zeff) 채널 추가 실험</h4>
       <p>
         X-ray 장비는 물체의 <b>실효 원자번호(Zeff)</b> 정보를 함께 가지고 있고, 이는 형태만으로는 구분되지 않는 재질 차이를 담습니다.
         다만 공식 물성 데이터 전달은 일정이 뒤에 있었습니다.
@@ -142,7 +142,7 @@
     </div>
 
     <div class="block">
-      <h4>5. 결과</h4>
+      <h4><span class="bn">05 &mdash;</span> 결과</h4>
       <div class="tbl-wrap">
         <table class="data">
           <thead><tr><th scope="col">지표 (9-view 세트 판정)</th><th scope="col">1차 모델</th><th scope="col">개선 모델</th></tr></thead>
@@ -212,14 +212,11 @@
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
-      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
-    </div>
-    <div class="small">
-      진경원 · Vision AI Engineer<br />
-      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
-    </div>
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
   </div>
 </footer>
 

@@ -17,26 +17,26 @@
 #roc{display:block;width:100%;height:auto}
 .ctrl{margin-top:6px}
 .ctrl label{display:flex;justify-content:space-between;align-items:baseline;font-size:.8125rem;color:var(--ink-2);margin-bottom:8px;gap:12px}
-.ctrl label b{font-family:var(--font-mono);font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.ctrl label b{font-family:var(--font-mono);font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
 input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:pointer}
 .ctrl .ends{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.6875rem;color:var(--ink-3);margin-top:-2px}
 
 .readout-wrap{overflow-x:auto;margin-top:20px}
 .readout{width:100%;min-width:320px;border-collapse:collapse;font-size:.875rem}
 .readout th,.readout td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line)}
-.readout th{font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.03em;color:var(--ink-2);font-weight:600;border-bottom-color:var(--line-strong)}
+.readout th{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;border-bottom-color:var(--line-strong)}
 .readout th:first-child,.readout td:first-child{text-align:left}
 .readout td{font-variant-numeric:tabular-nums;font-family:var(--font-mono);color:var(--ink)}
 .readout td:first-child{font-family:var(--font-body);color:var(--ink-2)}
 .readout tr:last-child td{border-bottom:0}
 .readout tr.on td{background:var(--surface-2)}
-.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:baseline}
-.readout .hero-row td{color:var(--ink);font-weight:600}
+.sw{display:inline-block;width:10px;height:10px;margin-right:8px;vertical-align:baseline}
+.readout .hero-row td{color:var(--bright);font-weight:600}
 
-.opside{display:flex;flex-direction:column;gap:14px}
+.opside{display:flex;flex-direction:column;gap:12px}
 .factcard{border:1px solid var(--line);background:var(--surface-2);padding:15px 16px}
-.factcard .t{font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.03em;color:var(--ink-2);margin-bottom:7px}
-.factcard .b{font-size:.875rem;line-height:1.65;color:var(--ink-2)}
+.factcard .t{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.factcard .b{font-size:.875rem;line-height:1.7;color:var(--ink-2)}
 .factcard .b b{color:var(--ink);font-family:var(--font-mono);font-variant-numeric:tabular-nums}
 
 /* two-stage figure */
@@ -44,113 +44,128 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 @media (max-width:760px){.twostage{grid-template-columns:minmax(0,1fr)}}
 .stagefig{border:1px solid var(--line);background:var(--surface-2);padding:14px}
 .stagefig svg{display:block;width:100%;height:auto}
-.stagefig .cap{margin-top:11px;font-size:.8125rem;line-height:1.6;color:var(--ink-2)}
-.stagefig .cap b{display:block;font-family:var(--font-mono);font-size:.75rem;letter-spacing:.02em;color:var(--accent-ink);margin-bottom:4px;font-weight:600}
+.stagefig .cap{margin-top:11px;font-size:.8125rem;line-height:1.65;color:var(--ink-2)}
+.stagefig .cap b{display:block;font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;font-weight:600}
 .stagefig:hover .hl,.stagefig:focus-within .hl{opacity:1}
 .hl{opacity:.45;transition:opacity .2s ease}
 
 /* bar chart */
 .barchart{margin-top:26px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:.8125rem;color:var(--ink-2)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--font-mono);font-size:.75rem;color:var(--ink-2)}
 .legend span{display:flex;align-items:center;gap:7px}
-.legend i{width:12px;height:12px;border-radius:2px;display:block}
+.legend i{width:12px;height:12px;display:block}
 .bars{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 14px;align-items:center}
-.bars .lbl{font-family:var(--font-mono);font-size:.8125rem;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.bars .lbl{font-family:var(--font-mono);font-size:.75rem;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
 .pair{display:flex;flex-direction:column;gap:2px}
 .bar{display:flex;align-items:center;gap:8px;height:15px}
-.bar .fill{height:100%;border-radius:0 4px 4px 0;min-width:2px}
-.bar .val{font-family:var(--font-mono);font-size:.75rem;font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap}
+.bar .fill{height:100%;min-width:2px}
+.bar .val{font-family:var(--font-mono);font-size:.75rem;font-variant-numeric:tabular-nums;color:var(--ink-3);white-space:nowrap}
 .bar.after .val{color:var(--ink);font-weight:600}
 .bars .delta{font-family:var(--font-mono);font-size:.75rem;color:var(--good);font-variant-numeric:tabular-nums}
-.axis0{grid-column:2;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:.6875rem;color:var(--ink-3);display:flex;justify-content:space-between;padding-top:4px}
+.axis0{grid-column:2;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:.625rem;letter-spacing:.08em;color:var(--ink-3);display:flex;justify-content:space-between;padding-top:4px}
 </style>
 </head>
 
 <header class="topbar">
   <div class="wrap">
-    <div class="who">진경원 <span>Vision AI Engineer</span></div>
-    <nav class="navlinks" aria-label="섹션">
-      <a href="#approach">일하는 방식</a>
-      <a href="#operating">운용점</a>
-      <a href="#projects">프로젝트</a>
-      <a href="#history">이력</a>
-      <a href="#stack">스택</a>
-    </nav>
+    <a class="brand" href="#top">kwjin.dev</a>
+    <a class="mailtop" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
   </div>
 </header>
 
 <main>
 
 <!-- ================= HERO ================= -->
-<section class="hero wrap" id="top">
-  <div class="namebox">
-    <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-    <span class="chip" aria-hidden="true">person 1.00</span>
-    <h1 class="name">진경원</h1>
-    <span class="role">Vision AI Engineer · Object Detection</span>
+<section class="hero-g wrap" id="top">
+  <div class="hero-top">
+    <div class="hero-name">
+      <h1 class="name">진경원</h1>
+      <span class="name-role">VISION AI ENGINEER</span>
+    </div>
+    <p class="pitch-g">
+      데이터 수집·검수부터 학습·경량화·엣지 배포까지 Object Detection 전 과정을 다룹니다.
+      상용 영상보안 솔루션의 탐지 모델군을 3년 이상 전담.
+    </p>
   </div>
 
-  <p class="pitch">
-    데이터 수집·검수부터 모델 학습, 경량화, 엣지 배포까지 Object Detection 전 과정을 다룹니다.
-    상용 영상보안 솔루션의 탐지 모델군을 3년 이상 전담하며,
-    <strong>성능 문제의 원인을 데이터와 모델 구조 양쪽에서 찾아 수치로 해결해</strong> 왔습니다.
-  </p>
+  <div class="statband">
+    <div class="sb hi">
+      <span class="k">False Positive</span>
+      <span class="v">16×<em> 감소</em></span>
+    </div>
+    <div class="sb">
+      <span class="k">CPU Latency</span>
+      <span class="v">10.2 &rarr; 7.2<em> ms</em></span>
+    </div>
+    <div class="sb">
+      <span class="k">2m mAP50</span>
+      <span class="v">0.737 &rarr; 0.978</span>
+    </div>
+    <div class="sb">
+      <span class="k">Webcam mAP50</span>
+      <span class="v">0.834 &rarr; 0.955</span>
+    </div>
+  </div>
+</section>
 
-  <div class="herometa">
-    <span>(주)시선에이아이 AI Lab</span>
-    <span>2022.03 ~ 재직 중 · 4년 5개월</span>
-    <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+<!-- ================= PROJECTS ================= -->
+<section class="sec wrap" id="projects">
+  <div class="sechead">
+    <span class="eyebrow">Projects / 04</span>
+    <h2>주요 프로젝트</h2>
+    <p class="lede">각 프로젝트 페이지에 문제 정의 &rarr; 접근 &rarr; 결과 순의 기록을 정리해 두었습니다.</p>
   </div>
 
-  <div class="stats">
-    <div class="stat">
-      <span class="k">오탐 감소</span>
-      <span class="v">16<em>×</em></span>
-      <span class="d">외부 데이터(COCO 11.8만 장) 검증 기준</span>
-    </div>
-    <div class="stat">
-      <span class="k">CPU 추론</span>
-      <span class="v">10.2 <em>→</em> 7.2<em> ms</em></span>
-      <span class="d">모델 구조 분석으로 약 30% 단축</span>
-    </div>
-    <div class="stat">
-      <span class="k">2m 원거리 mAP50</span>
-      <span class="v">0.737 <em>→</em> 0.978</span>
-      <span class="d">광각 장거리, Body Crop 2단계 검출</span>
-    </div>
-    <div class="stat">
-      <span class="k">웹캠 탐지 세대교체</span>
-      <span class="v">0.834 <em>→</em> 0.955</span>
-      <span class="d">배경 오탐 12.3% → 4.2%</span>
-    </div>
+  <div class="ptable">
+    <a class="prow" href="/projects/device-detection/">
+      <span class="pn">01</span>
+      <span class="pt">영상보안 솔루션 촬영기기 탐지</span>
+      <span class="pm">오탐 16× 감소 · 7.2 ms</span>
+      <span class="ps now">LIVE · 2023 —</span>
+    </a>
+    <a class="prow" href="/projects/sprint/">
+      <span class="pn">02</span>
+      <span class="pt">집중 스프린트 — 모델 라인 총점검</span>
+      <span class="pm">webcam mAP50 0.834 → 0.955</span>
+      <span class="ps">2026.07</span>
+    </a>
+    <a class="prow" href="/projects/xray/">
+      <span class="pn">03</span>
+      <span class="pt">X-ray 위해물품 탐지</span>
+      <span class="pm">73 class · 약 28만 장</span>
+      <span class="ps">ONGOING</span>
+    </a>
+    <a class="prow" href="/projects/casino/">
+      <span class="pn">04</span>
+      <span class="pt">카지노 영상분석</span>
+      <span class="pm">폐쇄망 PoC → 스마트테이블</span>
+      <span class="ps">ONGOING</span>
+    </a>
   </div>
 </section>
 
 <!-- ================= APPROACH ================= -->
 <section class="sec wrap" id="approach">
   <div class="sechead">
-    <span class="eyebrow">How I work</span>
+    <span class="eyebrow">How I work / 03</span>
     <h2>학습을 한 번 더 돌리기 전에, 원인을 먼저 가려냅니다</h2>
     <p class="lede">3년간 상용 탐지 모델을 운영하며 정리된 판단 기준 세 가지입니다.</p>
   </div>
   <div class="pillars">
     <article class="pillar">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="n">Diagnose</span>
+      <span class="n">01 — Diagnose</span>
       <h3>증상이 아니라 원인을 고칩니다</h3>
       <p>오탐이 나면 데이터를 더 붓기 전에 오탐 사례부터 분석합니다. 속도가 안 나오면 레이어 단위로 연산 이동을 추적합니다.</p>
       <p class="ex">손에 든 사각형 물체를 전부 스마트폰으로 오탐 → 라벨 안에 손 영역이 포함된 것이 원인. 렌즈 기준 상단만 라벨링하는 방식으로 전환.</p>
     </article>
     <article class="pillar">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="n">Verify</span>
+      <span class="n">02 — Verify</span>
       <h3>검증 점수가 좋으면 데이터를 의심합니다</h3>
       <p>검증 수치와 실사용 성능이 어긋날 때는 모델이 아니라 평가 체계를 먼저 봅니다. 데이터 누수는 세 개 프로젝트에서 반복해 발견했습니다.</p>
       <p class="ex">태블릿 검증셋의 random split 누수 · X-ray 9-view 교차 혼입 · 학습–벤치 데이터 유출(콘텐츠 해시로 적발).</p>
     </article>
     <article class="pillar">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="n">Ship</span>
+      <span class="n">03 — Ship</span>
       <h3>채택 기준에 배포 제약을 함께 둡니다</h3>
       <p>정확도가 가장 높은 모델이 항상 답은 아닙니다. 엣지 런타임 호환성과 추론 비용을 같은 표에 올려놓고 고릅니다.</p>
       <p class="ex">DEIM은 미탐율 최저(1.44%)였지만 RKNN 미지원이 확인돼 보류. 대신 C2PSA→C3K2 교체로 양자화 비호환까지 함께 해소.</p>
@@ -170,7 +185,6 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
   </div>
 
   <div class="panel">
-    <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
     <div class="opgrid">
       <div>
         <div class="panel-title">판정기 후보 3종의 ROC</div>
@@ -247,14 +261,13 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
   </div>
 
   <div class="panel">
-    <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
     <div class="twostage">
       <figure class="stagefig" style="margin:0" tabindex="0">
         <svg viewBox="0 0 320 190" role="img" aria-label="원본 프레임 전체를 640으로 추론하면 2미터 거리의 스마트폰이 수 픽셀로 줄어 미탐된다">
-          <rect x="1" y="1" width="318" height="188" fill="var(--surface)" stroke="var(--line)"/>
+          <rect x="1" y="1" width="318" height="188" fill="var(--bg)" stroke="var(--line)"/>
           <text x="10" y="17" font-family="var(--font-mono)" font-size="8.5" letter-spacing="1.2" fill="var(--ink-3)">STAGE 1 — FULL FRAME 640</text>
           <!-- floor line -->
-          <line x1="10" y1="158" x2="310" y2="158" stroke="var(--line)" stroke-dasharray="3 4"/>
+          <line x1="10" y1="158" x2="310" y2="158" stroke="var(--line-strong)" stroke-dasharray="3 4"/>
           <!-- person, far -->
           <g>
             <circle cx="158" cy="92" r="7" fill="var(--c-base)" opacity=".55"/>
@@ -272,7 +285,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 
       <figure class="stagefig" style="margin:0" tabindex="0">
         <svg viewBox="0 0 320 190" role="img" aria-label="인물 영역을 마진 10에서 20픽셀로 잘라 640으로 다시 추론하면 스마트폰이 검출된다">
-          <rect x="1" y="1" width="318" height="188" fill="var(--surface)" stroke="var(--line)"/>
+          <rect x="1" y="1" width="318" height="188" fill="var(--bg)" stroke="var(--line)"/>
           <text x="10" y="17" font-family="var(--font-mono)" font-size="8.5" letter-spacing="1.2" fill="var(--ink-3)">STAGE 2 — PERSON CROP → 640</text>
           <!-- crop frame -->
           <rect class="hl" x="96" y="30" width="128" height="140" fill="var(--accent-soft)"/>
@@ -286,7 +299,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
           <rect x="176" y="88" width="18" height="28" fill="var(--signal)" opacity=".82"/>
           <rect x="172" y="84" width="26" height="36" fill="none" stroke="var(--signal)" stroke-width="1.8"/>
           <rect x="172" y="75.5" width="52" height="9" fill="var(--signal)"/>
-          <text x="175" y="82.5" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="var(--surface)">phone 0.94</text>
+          <text x="175" y="82.5" font-family="var(--font-mono)" font-size="7" font-weight="700" fill="var(--bg)">phone 0.94</text>
           <text x="234" y="100" font-family="var(--font-mono)" font-size="8" fill="var(--ink-3)">≈ 90 px</text>
           <text x="10" y="176" font-family="var(--font-mono)" font-size="8" fill="var(--ink-3)">crop 마진 10~20 px · 입력 640</text>
         </svg>
@@ -306,124 +319,10 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
   </div>
 </section>
 
-<!-- ================= PROJECTS ================= -->
-<section class="sec wrap" id="projects">
-  <div class="sechead">
-    <span class="eyebrow">Projects</span>
-    <h2>주요 프로젝트</h2>
-    <p class="lede">각 프로젝트 페이지에 문제 정의 → 접근 → 결과 순의 기록을 정리해 두었습니다.</p>
-  </div>
-
-  <div class="projects">
-
-    <!-- P1 -->
-    <article class="proj">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="slug">device-detection</span>
-      <div class="proj-in">
-        <div class="proj-head">
-          <h3>영상보안 솔루션 촬영기기 탐지</h3>
-          <span class="period">2023.06 ~ 현재 · 3년+</span>
-          <span class="live">상용 배포 운영 중</span>
-        </div>
-        <p class="proj-sum">
-          재택근무 웹캠·엣지(광각) 카메라 영상에서 스마트폰·카메라·태블릿 등 촬영기기를 실시간 탐지하는 상용 솔루션입니다.
-          촬영기기·악세사리·깨진 이미지·가림 탐지로 이루어진 탐지 모델군을 전담하며, 대기업 고객사 전사 재택근무 환경에 배포·운영 중입니다.
-          쓸 수 있는 학습 데이터가 없어 웹 크롤링 수집과 소량 라벨링 검증부터 시작했습니다.
-        </p>
-        <div class="metrics">
-          <div class="metric"><span class="m-k">CPU 추론</span><span class="m-v"><span class="from">10.2 →</span> 7.2 ms</span></div>
-          <div class="metric"><span class="m-k">외부 검증 오탐</span><span class="m-v"><span class="up">16× 감소</span></span></div>
-          <div class="metric"><span class="m-k">2m mAP50</span><span class="m-v"><span class="from">0.737 →</span> 0.978</span></div>
-          <div class="metric"><span class="m-k">Bezel mAP50</span><span class="m-v"><span class="from">83.3 →</span> 99.5%</span></div>
-        </div>
-        <p class="stack-line">YOLO v8~v26 · Pose/Keypoint · OpenVINO INT8(NNCF) · RKNN · Auto Labeling</p>
-
-        <a class="morelink" href="/projects/device-detection/">자세히 보기 <span class="arw" aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-
-    <!-- P2 -->
-    <article class="proj">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="slug">sprint</span>
-      <div class="proj-in">
-        <div class="proj-head">
-          <h3>집중 스프린트 — 탐지 모델 라인 총점검</h3>
-          <span class="period">2026.07</span>
-        </div>
-        <p class="proj-sum">
-          웹캠·광각·전면 카메라 탐지 모델 라인 전체를 점검하는 스프린트를 수행했습니다.
-          AI 에이전트 병렬 오케스트레이션으로 실험 설계 → 실행 → 검증 사이클을 자동화해
-          동시 5~8개 작업을 운영했습니다(SLURM 클러스터 자원 오케스트레이션 포함).
-        </p>
-        <div class="metrics">
-          <div class="metric"><span class="m-k">웹캠 mAP50</span><span class="m-v"><span class="from">0.834 →</span> 0.955</span></div>
-          <div class="metric"><span class="m-k">배경 오탐</span><span class="m-v"><span class="from">12.3% →</span> 4.2%</span></div>
-          <div class="metric"><span class="m-k">모니터 오인식</span><span class="m-v"><span class="up">80% 제거</span></span></div>
-          <div class="metric"><span class="m-k">스마트글래스 F1</span><span class="m-v"><span class="from">0.816 →</span> 0.841</span></div>
-        </div>
-
-        <a class="morelink" href="/projects/sprint/">자세히 보기 <span class="arw" aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-
-    <!-- P3 -->
-    <article class="proj">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="slug">xray</span>
-      <div class="proj-in">
-        <div class="proj-head">
-          <h3>X-ray 위해물품 탐지</h3>
-          <span class="period">2026.04 ~ 진행 중 · 2025.11 1차 참여</span>
-        </div>
-        <p class="proj-sum">
-          공공 보안검색 과제. 73개 클래스 · 약 28만 장(Train/Val/Test = 239,084 / 24,256 / 24,183) 규모를
-          담당자 퇴사로 단독 인수했습니다. 인수 시점 mAP50 0.986으로 완성 단계처럼 보였지만,
-          실환경 대비 과도하게 높은 수치라 의문을 제기한 것이 출발점이었습니다.
-        </p>
-        <div class="metrics">
-          <div class="metric"><span class="m-k">오경보율</span><span class="m-v"><span class="from">2.18% →</span> 1.68%</span></div>
-          <div class="metric"><span class="m-k">정탐률</span><span class="m-v">94.4 ~ 95% 유지</span></div>
-          <div class="metric"><span class="m-k">규모</span><span class="m-v">73 class · 28만 장</span></div>
-        </div>
-        <p class="stack-line">YOLOv11x · 9-view Late Fusion · 물성(Zeff) 채널 실험</p>
-
-        <a class="morelink" href="/projects/xray/">자세히 보기 <span class="arw" aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-
-    <!-- P4 -->
-    <article class="proj">
-      <span class="ticks" aria-hidden="true"></span><span class="ticks ticks--b" aria-hidden="true"></span>
-      <span class="slug">casino</span>
-      <div class="proj-in">
-        <div class="proj-head">
-          <h3>카지노 영상분석</h3>
-          <span class="period">2025.11 ~ 진행 중 · 고객사 2곳</span>
-        </div>
-        <p class="proj-sum">
-          코드·데이터 반출입마다 담당자를 거쳐야 하는 폐쇄망 환경에서 3주간 현장에 상주하며
-          칩·카드 인식 파이프라인을 처음부터 구축했습니다. BMT·데모를 마친 뒤
-          신규 고객사 스마트테이블 프로젝트로 확장됐습니다.
-        </p>
-        <div class="metrics">
-          <div class="metric"><span class="m-k">PoC</span><span class="m-v">폐쇄망 3주 · 현장 상주</span></div>
-          <div class="metric"><span class="m-k">전달</span><span class="m-v">BMT · 데모 완료</span></div>
-          <div class="metric"><span class="m-k">확장</span><span class="m-v">치팅 탐지 1차 완성본</span></div>
-        </div>
-
-        <a class="morelink" href="/projects/casino/">자세히 보기 <span class="arw" aria-hidden="true">&rarr;</span></a>
-      </div>
-    </article>
-
-  </div>
-</section>
-
 <!-- ================= HISTORY ================= -->
 <section class="sec wrap" id="history">
   <div class="sechead">
-    <span class="eyebrow">History</span>
+    <span class="eyebrow">History / 12</span>
     <h2>프로젝트 이력</h2>
     <p class="lede">(주)시선에이아이 AI Lab · 2022.03 ~ 재직 중</p>
   </div>
@@ -502,14 +401,11 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 
 <footer>
   <div class="wrap foot">
-    <div>
-      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
-      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
-    </div>
-    <div class="small">
-      진경원 · Vision AI Engineer<br />
-      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
-    </div>
+    <span class="stackline">YOLO v8–v26 · Pose/Keypoint · OpenVINO INT8(NNCF) · RKNN · Auto Labeling</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중 · 4년 5개월<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
   </div>
 </footer>
 
@@ -570,7 +466,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
     var gAxes = document.getElementById("roc-axes");
 
     // plot ground
-    gGrid.appendChild(el("rect", { x: X(0), y: Y(1), width: PW, height: PH, fill: "var(--surface-2)", opacity: ".5" }));
+    gGrid.appendChild(el("rect", { x: X(0), y: Y(1), width: PW, height: PH, fill: "var(--bg)" }));
     [0, 0.25, 0.5, 0.75, 1].forEach(function (v) {
       gGrid.appendChild(el("line", { x1: X(v), y1: Y(0), x2: X(v), y2: Y(1), stroke: "var(--grid)", "stroke-width": 1 }));
       gGrid.appendChild(el("line", { x1: X(0), y1: Y(v), x2: X(1), y2: Y(v), stroke: "var(--grid)", "stroke-width": 1 }));
@@ -628,7 +524,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 
     // operating dots
     MODELS.forEach(function (m) {
-      m.halo = el("circle", { r: 7, fill: "var(--surface)", stroke: m.color, "stroke-width": 2 });
+      m.halo = el("circle", { r: 7, fill: "var(--bg)", stroke: m.color, "stroke-width": 2 });
       gDots.appendChild(m.halo);
     });
 
@@ -740,21 +636,6 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
       div.querySelector("p").textContent = r.d;
       tl.appendChild(div);
     });
-  }
-
-  /* ---------- nav scroll spy ---------- */
-  var links = Array.prototype.slice.call(document.querySelectorAll(".navlinks a"));
-  var targets = links.map(function (a) { return document.querySelector(a.getAttribute("href")); }).filter(Boolean);
-  if ("IntersectionObserver" in window && targets.length) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        links.forEach(function (a) {
-          a.setAttribute("aria-current", a.getAttribute("href") === "#" + e.target.id ? "true" : "false");
-        });
-      });
-    }, { rootMargin: "-52px 0px -70% 0px", threshold: 0 });
-    targets.forEach(function (t) { io.observe(t); });
   }
 })();
 </script>
