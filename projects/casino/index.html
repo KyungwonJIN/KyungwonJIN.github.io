@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>카지노 영상분석 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="who"><a href="/">&larr; 진경원 <span>Vision AI</span></a></div>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">Project / casino</span>
+  <h1 class="ptitle">카지노 영상분석</h1>
+  <div class="pmeta">
+    <span>2025.11 ~ 진행 중 · 고객사 2곳</span>
+    <span>폐쇄망 PoC → 스마트테이블 확장</span>
+  </div>
+
+  <p class="pitch">
+    코드·데이터 반출입마다 담당자를 거쳐야 하는 <strong>폐쇄망 환경에서 3주간 현장에 상주하며</strong>
+    칩·카드 인식 파이프라인을 처음부터 구축했습니다.
+    BMT·데모를 마친 뒤 신규 고객사 스마트테이블 프로젝트로 확장됐습니다.
+  </p>
+
+  <dl class="factsheet">
+    <dt>기간</dt>
+    <dd>2025.11 ~ 진행 중 (고객사 2곳)</dd>
+    <dt>환경</dt>
+    <dd>폐쇄망 PoC 3주 · 현장 상주 — 코드·데이터 반출입마다 담당자 승인 필요</dd>
+    <dt>역할</dt>
+    <dd>칩·카드 인식 파이프라인 설계·구현, 좌표계 변환, 라벨링 도구 자체 제작, BMT·데모 대응, 치팅 탐지 알고리즘 설계</dd>
+    <dt>기술</dt>
+    <dd>Homography / Piecewise Affine · Keypoint 검출 · Segmentation · 영상처리(이진화, 원통 전개, line 검출)</dd>
+  </dl>
+
+  <div class="stats three">
+    <div class="stat">
+      <span class="k">PoC</span>
+      <span class="v">폐쇄망 3주</span>
+      <span class="d">현장 상주 · 파이프라인 신규 구축</span>
+    </div>
+    <div class="stat">
+      <span class="k">전달</span>
+      <span class="v">BMT · 데모 완료</span>
+      <span class="d">고객 요구 포맷 대응 포함</span>
+    </div>
+    <div class="stat">
+      <span class="k">확장</span>
+      <span class="v">치팅 탐지 1차</span>
+      <span class="d">신규 고객사 스마트테이블 프로젝트</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 문제 정의 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Context</span>
+    <h2>3주, 폐쇄망, 백지 상태</h2>
+    <p class="lede">
+      기존 자산을 가져다 쓸 수 없고, 만든 결과를 바깥으로 꺼내 확인할 수도 없는 조건에서
+      <strong>칩·카드 인식 파이프라인을 처음부터 세워야 했습니다.</strong>
+    </p>
+  </div>
+
+  <div class="blocks">
+    <div class="block">
+      <p>
+        현장은 내부망이었습니다. 코드 한 줄, 데이터 한 장을 넣고 빼는 데 매번 담당자 승인을 거쳐야 했고,
+        평소처럼 외부 사전학습 자산이나 도구를 자유롭게 끌어다 쓸 수 없었습니다.
+        3주 안에 동작하는 파이프라인과 BMT·데모까지 만들어야 하는 일정이었으므로,
+        <b>반출입 횟수를 최소화하도록 작업 순서를 설계</b>하는 것부터가 과제였습니다.
+      </p>
+      <p>
+        기술적으로는 두 축이었습니다. 하나는 <b>사선으로 설치된 카메라 영상을 테이블 좌표계로 옮기는 문제</b>,
+        다른 하나는 <b>쌓여 있는 칩의 개수와 카드를 세는 문제</b>입니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 본문 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Work</span>
+    <h2>문제 → 접근 → 결과</h2>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4>1. 사선 카메라 → 탑뷰 좌표계 변환</h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>카메라가 테이블 위쪽 사선에 설치돼 있어, 어느 베팅 구역에 칩이 놓였는지 판정하려면 영상 좌표를 테이블 평면 좌표로 옮겨야 했습니다.</p></div>
+        <div><span class="tag">접근</span><p>먼저 단일 <b>Homography</b>를 적용했지만, 베팅 영역이 곡면 형태라 가장자리에서 왜곡이 남았습니다. 평면 가정 자체가 맞지 않는 구간이었습니다. <b>keypoint 기반으로 영역을 먼저 검출</b>한 뒤 구간별로 <b>Piecewise Affine 변환</b>을 적용해 보정했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>곡면 베팅 영역에서도 구역 판정이 가능한 탑뷰 좌표계를 확보했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4>2. 칩 카운팅</h4>
+      <p>
+        쌓인 칩은 옆면 줄무늬로 개수를 세야 하는데, 조명·각도·칩 색상에 따라 경계가 흐려집니다.
+        단일 정답이 없는 문제라 <b>이진화</b>, <b>원통 펼치기(unwrapping)</b>, <b>line 검출</b> 등
+        여러 영상처리 접근을 구현해 같은 데이터에서 비교했습니다.
+      </p>
+    </div>
+
+    <div class="block">
+      <h4>3. 라벨링 툴 자체 제작과 반복 사이클</h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>폐쇄망이라 외부 라벨링 서비스를 쓸 수 없었고, segmentation 라벨을 빠르게 만들 수단이 없었습니다.</p></div>
+        <div><span class="tag">접근</span><p>segmentation <b>라벨링 툴을 자체 제작</b>하고, <b>[소량 라벨링 → 학습 → 추론 → 재라벨링]</b> 사이클을 운영했습니다. 모델이 만든 추론 결과를 수정하는 방식이라 라벨링 비용이 회차마다 줄어듭니다.</p></div>
+        <div><span class="tag r">결과</span><p>제한된 인원·기간 안에서 학습 가능한 데이터를 확보했고, 이후 재라벨링도 같은 루프로 처리했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4>4. BMT · 데모</h4>
+      <p>
+        고객이 요구한 출력 포맷 대응까지 포함해 <b>BMT와 데모를 완료</b>했습니다.
+        폐쇄망 조건에서 3주 만에 파이프라인 구축부터 시연까지 끝낸 결과가 다음 단계로 이어졌습니다.
+      </p>
+    </div>
+
+    <div class="block">
+      <h4>5. 스마트테이블 프로젝트로 확장 <span class="when">진행 중</span></h4>
+      <p>
+        PoC 이후 <b>신규 고객사의 스마트테이블 프로젝트</b>로 확장됐습니다.
+        칩·카드 인식 위에 행위 판정 레이어를 올리는 방향입니다.
+      </p>
+      <ul class="blist" style="margin-top:14px">
+        <li><span><b>치팅 탐지 알고리즘 1차 완성본 전달</b> — LATE 베팅(베팅 마감 후 칩 추가), 칩 이동·회수, 카드 치팅 등 유형별 판정 로직</span></li>
+        <li><span><b>현장 CCTV 설치 기반 데이터 수집 설계</b> 진행 중 — 실제 운영 환경의 카메라 배치에 맞춘 수집 조건 정의</span></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MEDIA ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Screens</span>
+    <h2>화면 · 데모</h2>
+    <p class="lede">좌표 변환과 칩 카운팅 결과를 보여줄 자료를 추가할 자리입니다.</p>
+  </div>
+  <div class="media">
+    <div class="ph wide">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Demo video</span>
+      <span class="ph-t">칩·카드 인식 파이프라인 데모 영상 추가 예정</span>
+      <span class="ph-n">pipeline-demo.mp4</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">사선 → 탑뷰 좌표 변환 비교 스크린샷 추가 예정 — Homography vs Piecewise Affine</span>
+      <span class="ph-n">topview-compare.png</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">자체 제작 segmentation 라벨링 툴 화면 추가 예정</span>
+      <span class="ph-n">label-tool.png</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
+      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </div>
+    <div class="small">
+      진경원 · Vision AI Engineer<br />
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
+    </div>
+  </div>
+</footer>
+
+</html>

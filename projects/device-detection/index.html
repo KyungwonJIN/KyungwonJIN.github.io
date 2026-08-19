@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>영상보안 솔루션 촬영기기 탐지 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="who"><a href="/">&larr; 진경원 <span>Vision AI</span></a></div>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">Project / device-detection</span>
+  <h1 class="ptitle">영상보안 솔루션 촬영기기 탐지</h1>
+  <div class="pmeta">
+    <span>2023.06 ~ 현재 · 3년+</span>
+    <span class="live">상용 배포 운영 중</span>
+  </div>
+
+  <p class="pitch">
+    재택근무 웹캠·엣지(광각) 카메라 영상에서 스마트폰·카메라·태블릿 등 촬영기기를 실시간 탐지하는 상용 솔루션입니다.
+    <strong>쓸 수 있는 학습 데이터가 하나도 없는 상태</strong>에서 웹 크롤링 수집과 소량 라벨링 검증으로 시작해,
+    현재는 대기업 고객사 전사 재택근무 환경에 배포·운영 중입니다.
+  </p>
+
+  <dl class="factsheet">
+    <dt>기간</dt>
+    <dd>2023.06 ~ 현재 (3년+)</dd>
+    <dt>고객</dt>
+    <dd>대기업 고객사 — 전사 재택근무 환경에 상용 배포·운영 중</dd>
+    <dt>역할</dt>
+    <dd>탐지 모델군 전담 — 촬영기기·악세사리·깨진 이미지 탐지, 가림 탐지 알고리즘. 데이터 전략부터 학습·평가·경량화·엣지 배포까지 (얼굴인식·라이브니스 모델은 별도 담당자)</dd>
+    <dt>기술</dt>
+    <dd>YOLO 계열(v8~v26) · Pose/Keypoint · OpenVINO INT8(NNCF) · RKNN · Auto Labeling</dd>
+  </dl>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="k">CPU 추론</span>
+      <span class="v">10.2 <em>→</em> 7.2<em> ms</em></span>
+      <span class="d">모델 구조 분석으로 약 30% 단축</span>
+    </div>
+    <div class="stat">
+      <span class="k">외부 검증 오탐</span>
+      <span class="v">16<em>×</em> 감소</span>
+      <span class="d">COCO 11.8만 장 기준</span>
+    </div>
+    <div class="stat">
+      <span class="k">2m 원거리 mAP50</span>
+      <span class="v">0.737 <em>→</em> 0.978</span>
+      <span class="d">광각 장거리 · Body Crop 2단계 검출</span>
+    </div>
+    <div class="stat">
+      <span class="k">Bezel mAP50</span>
+      <span class="v">83.3 <em>→</em> 99.5<em>%</em></span>
+      <span class="d">탐지 모델 3종 통합 후</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 문제 정의 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Context</span>
+    <h2>왜 어려운 문제인가</h2>
+    <p class="lede">
+      촬영기기 탐지는 정확도 평균값이 아니라 <strong>운영 중의 오탐 한 건</strong>이 비용이 되는 태스크입니다.
+      사용자가 자기 자리에서 컵을 들었을 뿐인데 경보가 뜨면 그 순간 솔루션의 신뢰가 무너집니다.
+    </p>
+  </div>
+
+  <div class="blocks">
+    <div class="block">
+      <p>
+        시작 시점에 이 태스크에 쓸 수 있는 공개 데이터는 사실상 없었습니다.
+        웹 크롤링으로 후보를 모으고 소량만 라벨링해 초기 모델을 세운 뒤,
+        그 모델의 추론 결과를 다시 검수·재학습하는 루프로 데이터를 키워 왔습니다.
+        3년간 이 프로젝트에서 반복해 부딪힌 문제는 크게 네 가지였습니다.
+      </p>
+      <ul class="blist" style="margin-top:14px">
+        <li><span><b>오탐</b> — 손에 든 사각형 물체, 컵·텀블러, 모니터·태블릿 화면이 촬영기기로 잡히는 문제</span></li>
+        <li><span><b>미탐</b> — 광각 카메라 원거리에서 기기가 수 픽셀로 줄어 아예 검출되지 않는 문제</span></li>
+        <li><span><b>추론 비용</b> — 엣지·CPU 환경에서 실시간을 유지해야 하는 제약</span></li>
+        <li><span><b>평가 신뢰성</b> — 검증 점수는 좋은데 실사용 성능이 따라오지 않는 문제</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 본문 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Work</span>
+    <h2>문제 → 접근 → 결과</h2>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4>1. 라벨링 방식 재설계 <span class="when">2023</span></h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>초기 모델이 손에 든 사각형 물체를 전부 스마트폰으로 오탐했습니다. 사용 불가 수준이었습니다.</p></div>
+        <div><span class="tag">접근</span><p>데이터를 더 붓기 전에 오탐 사례부터 모아 공통점을 찾았습니다. 원인은 모델이 아니라 라벨이었습니다 — <b>라벨 박스 안에 손 영역이 함께 들어가 있었고</b>, 모델은 "손에 들린 사각형"을 학습하고 있었습니다. 렌즈를 기준으로 상단만 라벨링하는 방식으로 전환했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>첫 배포 모델부터 오탐이 크게 줄었고, 이 방식은 <b>3년간 이 프로젝트의 라벨링 표준</b>으로 정착했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4>2. 경량화 — P5를 제거했더니 왜 느려졌나 <span class="when">2026.03 ~ 04</span></h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>nano 모델 + INT8 양자화까지 적용한 뒤로는 추가 경량화 여지가 없었습니다. 소형 객체 중심 태스크라 큰 객체용 P5 레이어를 제거했는데, 예상과 달리 추론이 <b>느려졌습니다</b>(10.2 → 12.4 ms).</p></div>
+        <div><span class="tag">접근</span><p>레이어 단위로 연산 이동을 추적해 원인을 규명했습니다. <b>P5에 있던 C2PSA(attention) 연산이 해상도가 훨씬 큰 P4로 이동</b>하면서 총 연산량이 오히려 늘어난 것이었습니다. C2PSA를 C3K2로 교체해 해결했고, 양자화 outlier는 레이어 평균 10배 클리핑으로 처리했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>CPU 추론 <b>10.2 ms → 7.2 ms(약 30% 단축)</b>. 부수적으로 RKNN 양자화의 attention 비호환 문제까지 같은 교체로 해소됐습니다.</p></div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table class="data">
+          <thead><tr><th scope="col">모델 구성</th><th scope="col">CPU 추론 시간</th></tr></thead>
+          <tbody>
+            <tr><td>YOLOv11 Baseline</td><td>10.2 ms</td></tr>
+            <tr class="lose"><td>P5 제거 + C2PSA 유지</td><td>12.4 ms (악화)</td></tr>
+            <tr class="win"><td>P5 제거 + C3K2 대체 (최종)</td><td>7.2 ~ 7.7 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:14px">
+        같은 시기에 DETR 계열(DEIM, RF-DETR)도 직접 학습·벤치마크했습니다.
+        <b>DEIM은 미탐율이 가장 낮았지만(1.44%) RKNN 미지원이 확인돼 보류</b>했습니다.
+        정확도가 가장 높은 모델이 항상 답은 아니고, 엣지 런타임 호환성과 추론 비용을 같은 표에 올려놓고 골라야 한다는 판단 기준이 여기서 나왔습니다.
+      </p>
+    </div>
+
+    <div class="block">
+      <h4>3. 오탐 대응 — 실사용 시나리오 기반 null 데이터 설계 <span class="when">2024.09 ~ 2025.03</span></h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>컵·텀블러 등 손에 든 물체를 스마트폰으로 오탐하는 이슈가 운영 중 계속 제기됐습니다. 사후에 신고된 케이스만 넣어 재학습하는 방식으로는 다음 오탐을 막을 수 없었습니다.</p></div>
+        <div><span class="tag">접근</span><p>실사용 환경에서 오탐이 날 만한 물체를 <b>미리 예측해 null 데이터셋을 설계</b>했습니다. 운영에서 실제로 올라온 오탐 사례는 추론 구조(원본 + crop)에 맞춰 <b>양쪽 모두 재학습</b>했습니다. 여기에 더해 <b>ImageNet 130만 장을 운영 모델로 역추론</b>해 오검출이 나는 유형 <b>8,994장</b>을 자동으로 골라 null로 확보하는 방식을 병행했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>외부 데이터(COCO 11.8만 장) 검증에서 오탐 <b>16배 감소</b>. 배포 후 실사용 오탐 이슈 제기가 줄었습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4>4. 소형 객체 — Body Crop 2단계 검출 <span class="when">2024 ~ 2026</span></h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>광각 카메라 원거리에서는 촬영기기가 수 픽셀 크기로 축소돼, 원본 프레임 추론만으로는 구조적으로 미탐이 발생했습니다.</p></div>
+        <div><span class="tag">접근</span><p>인물을 먼저 탐지하고 그 영역만 crop해 다시 추론하는 <b>2단계 구조</b>를 도입했습니다. crop 마진과 추론 입력 사이즈를 실험해 최적점(<b>마진 10~20 px · 입력 640</b>)을 도출했고, 거리별(1m / 1.5m / 2m)·<b>12기종</b> 데이터를 새로 수집해 학습했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>2m 거리 mAP50 <b>0.737 → 0.978(+24.1%p)</b>, 전체 평균 <b>0.870 → 0.980(+11.0%p)</b>. 이 구조는 이후 원거리 소형 객체 탐지의 기본 형태로 정착했습니다.</p></div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table class="data">
+          <thead><tr><th scope="col">거리</th><th scope="col">기존 모델</th><th scope="col">개선 모델</th><th scope="col">개선폭</th></tr></thead>
+          <tbody>
+            <tr class="win"><td>2 m</td><td>0.737</td><td>0.978</td><td>+24.1%p</td></tr>
+            <tr><td>1.5 m</td><td>0.901</td><td>0.992</td><td>+9.1%p</td></tr>
+            <tr><td>1 m</td><td>0.972</td><td>0.990</td><td>+1.8%p</td></tr>
+            <tr><td>평균 (mAP50)</td><td>0.870</td><td>0.980</td><td>+11.0%p</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:14px">
+        메인 페이지의 <a href="/#twostage">2단계 검출 다이어그램</a>에서 원본 추론과 crop 재추론의 픽셀 크기 차이를 그림으로 볼 수 있습니다.
+      </p>
+    </div>
+
+    <div class="block">
+      <h4>5. 탐지 모델 3종 통합 <span class="when">2025.07 ~ 2026.03</span></h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>카메라 · Face&amp;Body · Bezel&amp;Paper(liveness) 3개 모델을 단일 모델로 통합하는 과제였습니다. 1차 통합에서 loss는 정상적으로 수렴하는데 keypoint 결과만 비정상이었습니다.</p></div>
+        <div><span class="tag">접근</span><p>학습 설정이 아니라 라벨을 의심하고 정합성을 전수 분석해 두 가지 원인을 분리했습니다 — <b>일부 모델의 bbox 라벨 오류</b>, 그리고 <b>face 외 클래스에 들어간 keypoint 근사값 오염</b>. 양쪽을 교정한 뒤 재학습했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>기존 개별 모델 대비 성능 저하 없이 단일 모델로 통합·배포했습니다(Bezel mAP50 <b>83.3 → 99.5%</b>). 운영·배포 파이프라인이 3개에서 <b>1개</b>로 단순화됐습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4>6. 데이터 운영 기반</h4>
+      <p>
+        학습을 한 번 더 돌리는 것만으로는 잡히지 않는 문제가 계속 나왔습니다.
+        수십만 장 규모 데이터를 소수 인원으로 굴리려면 수집·검수·라벨링 각 단계의 반복 작업을 자동화해야 했고,
+        3년에 걸쳐 그 기반을 만드는 데 시간을 썼습니다.
+      </p>
+      <ul class="blist" style="margin-top:14px">
+        <li><span><b>수집</b> — 외부 지원자 19명 · 재택 40명 등 <b>60명 이상(50만 장)</b> 규모의 크라우드소싱을 설계·관리. 부족한 유형은 유튜브 API 크롤링으로 보충 — <b>115만 프레임</b>에서 모델 추론으로 후보만 자동 선별해 <b>10만 장</b>을 확보했습니다.</span></li>
+        <li><span><b>검수</b> — <b>24만 장</b>을 직접 검수하면서, 흐림 때문에 렌즈가 식별되지 않는 이미지가 주요 탈락 원인임을 확인했습니다. 저조도 · bbox 크기 미달 · 블러(Laplacian 분산) · null 정제 <b>4종 자동 필터</b>를 만들어 사람이 볼 물량 자체를 줄였고, 검수용 이미지 뷰어를 제작해 협업 부서에 배포했습니다.</span></li>
+        <li><span><b>라벨링</b> — 수작업 라벨링을 오토라벨링으로 대체. SAM2(비디오 트래킹) → Grounding DINO → Grounded-SAM2로 도구를 단계적으로 교체하며 처리 속도 <b>5배</b>를 확보했습니다.</span></li>
+        <li><span><b>신규 라벨 구축</b> — 스마트폰 렌즈 위치처럼 새 라벨이 필요할 때는 소량만 직접 라벨링해 초기 모델을 만들고, 그 추론 결과를 검수·재학습하는 루프로 비용을 줄였습니다(렌즈 검출 mAP50 <b>66% → 98%</b>).</span></li>
+        <li><span><b>평가</b> — 모든 모델 교체를 오탐율/미탐율 벤치마크로 검증합니다. 검증 점수와 실사용 성능이 어긋나면 모델이 아니라 데이터를 먼저 의심합니다 — 태블릿 검증셋의 <b>random split 데이터 누수</b>를 발견해 인물 단위 분리로 교정했습니다.</span></li>
+        <li><span><b>신모델 추적</b> — YOLOv8~v26, YOLOv12, mamba-yolo, RF-DETR, DEIM을 출시 직후 직접 학습·벤치마크해 정확도 · 속도 · 엣지 호환성 기준으로 채택/보류를 판단합니다.</span></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MEDIA ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Screens</span>
+    <h2>화면 · 데모</h2>
+    <p class="lede">탐지 결과 화면과 데모 영상을 추가할 자리입니다.</p>
+  </div>
+  <div class="media">
+    <div class="ph wide">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Demo video</span>
+      <span class="ph-t">실시간 탐지 데모 영상 추가 예정 — 웹캠 화면에서 스마트폰이 검출되는 장면</span>
+      <span class="ph-n">demo.mp4</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">라벨링 방식 비교 스크린샷 추가 예정 — 손 포함 라벨 vs 렌즈 기준 상단 라벨</span>
+      <span class="ph-n">label-compare.png</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">검수용 이미지 뷰어 화면 추가 예정 — 4종 자동 필터 적용 전후</span>
+      <span class="ph-n">viewer.png</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div class="eyebrow" style="margin-bottom:8px">Contact</div>
+      <a class="mail" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </div>
+    <div class="small">
+      진경원 · Vision AI Engineer<br />
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중
+    </div>
+  </div>
+</footer>
+
+</html>
