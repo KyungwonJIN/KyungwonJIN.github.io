@@ -69,6 +69,10 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="#top">kwjin.dev</a>
+    <nav class="navlinks" aria-label="사이트">
+      <a href="#side">사이드</a>
+      <a href="/notes/">노트</a>
+    </nav>
     <a class="mailtop" href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
   </div>
 </header>
@@ -316,6 +320,46 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
       </div>
       <div class="bars" id="distbars"></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= SIDE PROJECTS ================= -->
+<section class="sec wrap" id="side">
+  <div class="sechead">
+    <span class="eyebrow">Side projects / 02</span>
+    <h2>사이드 프로젝트</h2>
+    <p class="lede">업무와 별개로, 혼자 기획해서 출시까지 끌고 간 것들입니다. 만드는 동안의 판단은 <a href="/notes/">노트</a>에 정리해 둡니다.</p>
+  </div>
+
+  <div class="spgrid">
+    <article class="spcard">
+      <div class="sptop">
+        <h3>말투 판독기</h3>
+        <span class="sptag">토스 미니앱 · 2026.09 출시</span>
+      </div>
+      <p>
+        카톡 대화 내보내기 파일에서 내 메시지만 골라 말투 유형·세대·애정도 랭킹을 뽑아주는 미니앱.
+        파일은 브라우저 안에서만 읽고 서버로 보내지 않는 구조라 서버도, 저장되는 대화도 없습니다.
+      </p>
+      <div class="splinks">
+        <a href="https://maltu.pages.dev">웹으로 해보기 &rarr;</a>
+        <a href="/notes/toss-miniapp-launch/">출시기 읽기 &rarr;</a>
+      </div>
+    </article>
+
+    <article class="spcard">
+      <div class="sptop">
+        <h3>VLM 워크북</h3>
+        <span class="sptag">인터랙티브 학습 코스 · 14장</span>
+      </div>
+      <p>
+        비전-언어 모델이 실제로 어떻게 동작하는지 읽는 대신 만져보며 익히는 14장짜리 공개 학습 노트.
+        토큰화부터 그라운딩·LoRA·서빙까지, 실습은 전부 브라우저 안에서 돌아갑니다.
+      </p>
+      <div class="splinks">
+        <a href="https://vlm-study.kwjin.dev">워크북 열기 &rarr;</a>
+      </div>
+    </article>
   </div>
 </section>
 

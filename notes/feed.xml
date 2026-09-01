@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>kwjin.dev — 노트</title>
+    <link>https://kwjin.dev/notes/</link>
+    <atom:link href="https://kwjin.dev/notes/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>만든 것과, 만들면서 내린 판단에 대한 기록. 격주 갱신.</description>
+    <language>ko</language>
+    <copyright>진경원</copyright>
+    <lastBuildDate>Tue, 01 Sep 2026 09:00:00 +0900</lastBuildDate>
+    <item>
+      <title>아이디어 4개를 버리고 나서야 토스에 미니앱을 출시했다</title>
+      <link>https://kwjin.dev/notes/toss-miniapp-launch/</link>
+      <guid isPermaLink="true">https://kwjin.dev/notes/toss-miniapp-launch/</guid>
+      <pubDate>Tue, 01 Sep 2026 09:00:00 +0900</pubDate>
+      <category>앱인토스</category>
+      <category>사이드 프로젝트</category>
+      <category>출시기</category>
+      <description>구독 관리, 흥얼거림 검색, 밈 큐레이션, 심리검사 주식 추천 — 아이디어 네 개를 차례로 접고 다섯 번째로 만든 카톡 말투 분석기 출시기. 기기 안에서만 처리하는 구조로 개인정보 리스크와 서버 비용, 심사 부담을 한꺼번에 덜어낸 과정과, 서버 없이 공유 루프를 닫은 방법.</description>
+    </item>
+  </channel>
+</rss>
