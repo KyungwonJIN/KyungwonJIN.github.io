@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>MATE — 데이터 엔진 워크벤치 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">Project / mate</span>
+  <h1 class="ptitle">MATE — 데이터 엔진 워크벤치</h1>
+  <div class="pmeta">
+    <span>2026.08 ~ 진행 중 · 1인 개발</span>
+    <span class="live">폐쇄망 GPU 클러스터에서 매일 사용 중</span>
+  </div>
+
+  <p class="pitch">
+    데이터셋 관리, 라벨링·검수, 학습 제출을 브라우저 도구 하나로 묶은 자체 호스팅 ML 데이터 워크벤치입니다.
+    실무에 쓰려고 직접 설계·개발했고, 폐쇄망 GPU 클러스터에 배포해 매일 쓰고 있습니다.
+    초점은 <strong>모델이 기존 라벨과 다르게 본 곳만 사람이 보는</strong> 데이터 엔진 루프입니다.
+  </p>
+
+  <dl class="factsheet">
+    <dt>이름</dt>
+    <dd>Manage · Annotate · Train · Evaluate — 마지막 E에 해당하는 평가 게이트는 다음 단계</dd>
+    <dt>기간</dt>
+    <dd>2026.08 ~ 진행 중 (2026.08.04 첫 커밋)</dd>
+    <dt>형태</dt>
+    <dd>자체 호스팅 웹 도구 — 파이썬 패키지 하나에 API 서버(FastAPI)와 React 프런트를 번들, 폐쇄망 GPU 클러스터에 배포</dd>
+    <dt>역할</dt>
+    <dd>1인 개발 — 설계, 서버·프런트 구현, 테스트·린트·CI 구성</dd>
+    <dt>기술</dt>
+    <dd>Python · FastAPI · React · SQLite · Slurm · ultralytics · ms-swift · SAM · CLIP</dd>
+  </dl>
+
+  <div class="stats three">
+    <div class="stat">
+      <span class="k">기간</span>
+      <span class="v">6<em>주 ·</em> 160<em> 커밋</em></span>
+      <span class="d">2026.08.04 첫 커밋 · 09.15 기준</span>
+    </div>
+    <div class="stat">
+      <span class="k">테스트</span>
+      <span class="v">약 800<em> 개</em></span>
+      <span class="d">1인 개발 · 린트 · CI 구성</span>
+    </div>
+    <div class="stat">
+      <span class="k">보조 모델</span>
+      <span class="v">YOLO · SAM · VLM</span>
+      <span class="d">프리라벨 · 분할 · 검출 · 검증 · 태깅</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 문제 정의 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Context</span>
+    <h2>모델 코드 바깥에서 쓰는 시간</h2>
+    <p class="lede">
+      ML 실무의 상당 부분은 모델 코드가 아니라 그 주변에서 소모됩니다.
+      <strong>흩어진 주변 작업을 하나의 루프로 잇는 도구</strong>가 필요했습니다.
+    </p>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4><span class="bn">01 &mdash;</span> 왜 만들었나</h4>
+      <p>
+        문제는 모델 코드 자체보다 그 주변이었습니다.
+        같은 종류의 작업이 반복되는데, 그 흔적은 매번 스크립트와 터미널, 노트북과 스프레드시트로 흩어졌습니다.
+      </p>
+      <ul class="blist" style="margin-top:14px">
+        <li><span><b>라벨링 · 검수</b> — 대상을 매번 스크립트로 잘라내고, 결과는 손으로 취합했습니다.</span></li>
+        <li><span><b>학습</b> — 어디에 어떤 설정으로 던졌는지가 터미널 히스토리에만 남았습니다.</span></li>
+        <li><span><b>평가</b> — 결과가 노트북과 스프레드시트에 흩어졌습니다.</span></li>
+      </ul>
+      <p style="margin-top:14px">
+        이 과정을 브라우저 도구 하나로 묶기로 하고, 실무에 쓰려고 직접 설계·개발했습니다.
+      </p>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">02 &mdash;</span> 초점 — 데이터 엔진 루프</h4>
+      <p>
+        기능 목록은 길지만 초점은 한 문장입니다 — <b>모델이 기존 라벨과 다르게 본 곳만 사람이 본다.</b>
+        전체를 처음부터 다시 훑는 대신, 아래 루프를 한 도구 안에서 닫는 것을 목표로 설계했습니다.
+      </p>
+      <ul class="blist" style="margin-top:14px">
+        <li><span><b>오토라벨</b> — YOLO 프리라벨, SAM 클릭·텍스트 분할, OpenAI 호환으로 서빙한 VLM의 검출·검증·태깅</span></li>
+        <li><span><b>불일치 검사</b> — 기존 라벨과 모델 예측을 비교합니다. 검사는 판정만 기록하고 라벨은 바꾸지 않습니다.</span></li>
+        <li><span><b>우선순위 검수</b> — 우선순위 점수를 매기고, 키보드 집중 검수 큐에서 승인·반려합니다.</span></li>
+        <li><span><b>데이터셋 버전</b> — 검수 결과를 분할과 매니페스트 sha256으로 고정한 불변 버전으로 만듭니다.</span></li>
+        <li><span><b>재학습</b> — Slurm으로 학습을 제출하고, 학습한 모델을 다시 보조 도구로 연결합니다.</span></li>
+      </ul>
+      <p style="margin-top:14px">
+        실제로 수만 장 규모 객체 검출 데이터의 기존 라벨을 전수 검수할 때 이 루프를 썼습니다.
+        승인된 수백 장으로 <b>VLM을 LoRA 튜닝</b>하고 <b>가벼운 크롭 분류기</b>를 학습한 뒤,
+        <b>라벨과 모델이 다르게 본 이미지만</b> 사람이 검수했습니다.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= 본문 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Work</span>
+    <h2>설계 → 실사용 → 다음 단계</h2>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4><span class="bn">03 &mdash;</span> 설계 결정 3가지</h4>
+
+      <p><b>① 레포 하나 · 앱 하나, 경계는 플러그인 계약으로</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>파이썬 패키지 하나에 API 서버(FastAPI)와 React 프런트를 함께 번들했습니다. 기능 모듈(<code>label</code> · <code>train</code> 등)은 서로 직접 import하지 않고 <code>core</code>만 거칩니다. Trainer · Exporter · Synthesizer · Assist · Embedder는 레지스트리에 등록하는 <b>플러그인</b>으로 분리했습니다.</p></div>
+        <div><span class="tag r">이유</span><p>1인 개발로 기능이 빠르게 늘어나도 모듈 사이의 경계가 무너지지 않게 하려는 것입니다.</p></div>
+      </div>
+
+      <p style="margin-top:22px"><b>② 라벨은 append-only 스냅샷, 데이터셋 버전은 불변</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>라벨은 덮어쓰지 않고 <b>append-only 스냅샷</b>으로 쌓고, 데이터셋 버전은 분할과 매니페스트 sha256으로 고정한 <b>불변</b> 버전으로 만듭니다. 모델 검사는 판정만 기록할 뿐 라벨을 바꾸지 않습니다. 편집기는 <code>base_version</code>을 기준으로 저장해, 그 사이 라벨이 바뀌었으면 오래된 저장을 <b>409</b>로 거절합니다.</p></div>
+        <div><span class="tag r">이유</span><p>이미 완성된 데이터셋 위에서도 검사를 안전하게 반복할 수 있고, 학습 결과를 그 학습에 쓰인 정확한 데이터에 연결할 수 있습니다.</p></div>
+      </div>
+
+      <p style="margin-top:22px"><b>③ 폐쇄망 전제, 모든 작업은 Run으로 기록</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>외부에서 아무것도 내려받지 않고, 호스트 · 경로 · 스케줄러 같은 환경 값은 설정 파일에만 둡니다. 오토라벨 · 검사 · 임베딩 · 버전 생성 · 학습(Slurm 제출) · 서빙은 모두 단계 · 진행률 · 취소 · 산출물을 가진 <b>Run</b>으로 남습니다.</p></div>
+        <div><span class="tag r">이유</span><p>인터넷이 없는 클러스터에서 재현성과 계보를 확보하기 위해서입니다. 학습 제출도 터미널 히스토리가 아니라 Run 기록으로 남습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">04 &mdash;</span> 실사용에서 고친 것</h4>
+      <p>
+        객체 검출 데이터 검수 외에 소규모 키포인트 · 영상 프레임 데이터 라벨링에도 쓰고 있습니다.
+        실사용에서 드러난 문제와 고친 방법입니다.
+      </p>
+      <div class="pab" style="margin-top:14px">
+        <div><span class="tag">문제</span><p>이미지를 전환하는 도중 이전 이미지의 저장 응답이 늦게 도착하면, 그 응답이 <b>다음 이미지의 라벨을 덮어쓰는</b> 오염이 생겼습니다.</p></div>
+        <div><span class="tag">접근</span><p>편집 상태를 <b>문서(이미지) 단위</b>로 관리하도록 바꾸고, 서버 쪽에 <b>버전 가드</b>를 두어 기준 버전이 맞지 않는 저장을 받지 않게 했습니다.</p></div>
+        <div><span class="tag r">결과</span><p>늦게 도착한 저장 응답이 다른 이미지의 라벨을 덮어쓰는 경로를 차단했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">05 &mdash;</span> 지금 되는 것 / 다음 단계 <span class="when">2026.09.15 기준</span></h4>
+      <p><b>지금 되는 것</b></p>
+      <ul class="blist" style="margin-top:10px">
+        <li><span><b>데이터셋</b> — YOLO txt 형식 등록, 필터 갤러리</span></li>
+        <li><span><b>편집 · 검수</b> — 박스 · 폴리곤 편집기, 분류 태깅, 승인 · 반려, 키보드 집중 검수 큐, 라벨 이력 복원</span></li>
+        <li><span><b>보조 도구</b> — YOLO 프리라벨, SAM 클릭 · 텍스트 분할, OpenAI 호환 서빙 VLM으로 검출 · 검증 · 태깅, 크롭 분류기 검증</span></li>
+        <li><span><b>검사</b> — 라벨 vs 예측 불일치 검사, 우선순위 점수, CLIP 임베딩 기반 유사 이미지</span></li>
+        <li><span><b>내보내기</b> — <code>yolo</code> · <code>yolo_seg</code> · <code>imagefolder</code>(크롭) · <code>sharegpt</code>(VLM) · <code>masks</code></span></li>
+        <li><span><b>학습</b> — Slurm 제출(ultralytics detect · segment · classify, ms-swift VLM LoRA), 프리셋, 제출 전 검사, 모델 레지스트리, 학습한 모델을 보조 도구로 연결</span></li>
+        <li><span><b>합성</b> — <code>augment</code> · <code>copy_paste</code> · <code>crop_derive</code></span></li>
+        <li><span><b>화면</b> — 데이터셋별 루프 다이어그램, Run 단계 워터폴</span></li>
+      </ul>
+      <p style="margin-top:22px"><b>다음 단계</b> — 아직 구현하지 않은 부분입니다.</p>
+      <ul class="blist" style="margin-top:10px">
+        <li><span><b>평가 게이트</b> — 챔피언 / 챌린저 모델을 홀드아웃에서 비교하는 단계. 이름의 마지막 E(Evaluate)에 해당하며 다음 단계로 남아 있습니다.</span></li>
+        <li><span><b>보류</b> — timm 학습기</span></li>
+        <li><span><b>미지원</b> — COCO 형식 가져오기 · 내보내기</span></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MEDIA ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">Screens</span>
+    <h2>화면 · 데모</h2>
+    <p class="lede">실제 화면을 공개 데이터(COCO)로 촬영해 추가할 자리입니다.</p>
+  </div>
+  <div class="media">
+    <div class="ph wide">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">데이터셋 갤러리 — 라벨과 예측이 어긋난 이미지에 불일치 뱃지가 붙은 화면. 공개 데이터(COCO)로 촬영 예정</span>
+      <span class="ph-n">dataset-gallery.png</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">집중 검수 편집기 — 불일치를 &ldquo;라벨 → 예측&rdquo; 한 줄로 보여주는 화면. 공개 데이터(COCO)로 촬영 예정</span>
+      <span class="ph-n">review-editor.png</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">Screenshot</span>
+      <span class="ph-t">Run 단계 워터폴 — 작업이 단계별로 진행되는 모습을 보여주는 화면. 공개 데이터(COCO)로 촬영 예정</span>
+      <span class="ph-n">run-waterfall.png</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>

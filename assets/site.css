@@ -543,3 +543,6 @@ footer{margin-top:clamp(48px,7vw,76px);border-top:1px solid var(--line);padding:
   border-top:1px solid var(--line);font-size:.9375rem;line-height:1.8;color:var(--ink-2);
 }
 .postfoot b{color:var(--ink);font-weight:600}
+
+/* 한글 제목은 어절 단위로 줄바꿈 — 모바일에서 단어 중간이 끊기지 않게 */
+.ptitle,.prow .pt{word-break:keep-all}

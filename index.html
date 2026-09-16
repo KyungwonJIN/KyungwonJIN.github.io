@@ -96,7 +96,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 <!-- ================= PROJECTS ================= -->
 <section class="sec wrap" id="projects">
   <div class="sechead">
-    <span class="eyebrow">Projects / 04</span>
+    <span class="eyebrow">Projects / 05</span>
     <h2>주요 프로젝트</h2>
     <p class="lede">각 프로젝트 페이지에 문제 정의 &rarr; 접근 &rarr; 결과 순의 기록을 정리해 두었습니다.</p>
   </div>
@@ -124,6 +124,12 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
       <span class="pn">04</span>
       <span class="pt">카지노 영상분석</span>
       <span class="pm">폐쇄망 PoC → 스마트테이블</span>
+      <span class="ps">ONGOING</span>
+    </a>
+    <a class="prow" href="/projects/mate/">
+      <span class="pn">05</span>
+      <span class="pt">MATE — 데이터 엔진 워크벤치</span>
+      <span class="pm">라벨과 예측이 다른 곳만 검수</span>
       <span class="ps">ONGOING</span>
     </a>
   </div>
@@ -307,7 +313,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 <!-- ================= HISTORY ================= -->
 <section class="sec wrap" id="history">
   <div class="sechead">
-    <span class="eyebrow">History / 12</span>
+    <span class="eyebrow">History / 13</span>
     <h2>프로젝트 이력</h2>
     <p class="lede">(주)시선에이아이 AI Lab · 2022.03 ~ 재직 중</p>
   </div>
@@ -589,6 +595,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 
   /* ---------- timeline ---------- */
   var TL = [
+    { w: "2026.08 ~ 진행 중", now: true, l: "/projects/mate/", t: "MATE — 데이터 엔진 워크벤치", d: "데이터셋 관리·라벨링·검수·학습 제출을 한 도구로 묶은 ML 데이터 워크벤치 1인 개발(폐쇄망 GPU 클러스터 배포·매일 사용), 오토라벨→불일치 검사→우선순위 검수 루프로 라벨과 모델 예측이 다른 이미지만 검수" },
     { w: "2026.07", now: false, l: "/projects/sprint/", t: "집중 스프린트 — 모델 라인 총점검", d: "후보 74종 비교로 웹캠 모델 세대교체(mAP50 0.834→0.955), 태블릿 2차 검증기 배포, VLM 활용성 평가, 3년 모델 자산 감사" },
     { w: "2026.04 ~ 진행 중", now: true, l: "/projects/xray/", t: "X-ray 위해물품 탐지", d: "73개 클래스·28만 장 단독 인수. 9-view 데이터 누수 발견 후 scene 단위 재분할, late fusion으로 오경보율 2.18%→1.68%" },
     { w: "2026.04 ~ 진행 중", now: true, t: "전면 카메라 탐지 (합성 데이터)", d: "얼굴 keypoint 기반 촬영버튼 합성 데이터 설계, 오탐 주원인이 TTA임을 규명·제거로 성능 개선" },
