@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>비정사각 입력으로 CPU 연산 40% 절감 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/center/">Center</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · rect-input</span>
+  <h1 class="ptitle">비정사각(16:9) 입력으로 포즈 검출기 CPU 연산 40% 절감</h1>
+  <div class="pmeta">
+    <span>2026.09 · 재검토 2026.10</span>
+    <span>웹캠용 경량 얼굴 · 사람 포즈 검출기</span>
+  </div>
+
+  <p class="pitch">
+    웹캠 영상은 16:9인데 검출기는 640×640 정사각으로 레터박스해서 추론하고 있었습니다.
+    위아래 여백까지 계산하는 셈이라, YOLO11n 기반 얼굴 · 사람 포즈 모델을 <strong>640×384 직사각 입력</strong>으로 다시 학습했습니다.
+    연산량과 CPU 지연이 약 40% 줄었고, 정확도 손실은 AP50 0.01 미만이었습니다.
+  </p>
+
+  <dl class="factsheet">
+    <dt>기간</dt>
+    <dd>2026.09.28 ~ 09.30, 사후 재검토 10.03</dd>
+    <dt>모델</dt>
+    <dd>YOLO11n 기반 포즈 모델 — 얼굴 · 사람 박스와 키포인트</dd>
+    <dt>측정 환경</dt>
+    <dd>배포 환경과 같은 CPU · OpenVINO INT8 (1 · 4 · 16코어)</dd>
+    <dt>기술</dt>
+    <dd>Ultralytics · PyTorch · OpenVINO (NNCF) · 커스텀 트레이너</dd>
+  </dl>
+
+  <div class="stats three">
+    <div class="stat">
+      <span class="k">연산량</span>
+      <span class="v">−40<em>%</em></span>
+      <span class="d">6.79 → 4.07 GFLOPs</span>
+    </div>
+    <div class="stat">
+      <span class="k">CPU 지연 (INT8 · 1코어)</span>
+      <span class="v">−40.4<em>%</em></span>
+      <span class="d">92.2 → 54.9 ms · 4 · 16코어도 약 −40%</span>
+    </div>
+    <div class="stat">
+      <span class="k">정확도 대가</span>
+      <span class="v">AP50 <em>−0.0065</em></span>
+      <span class="d">얼굴 기준 · 사람은 −0.002 이내</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 문제 정의 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">배경</span>
+    <h2>정사각 입력이 계산하던 빈 여백</h2>
+    <p class="lede">
+      1280×720 웹캠 프레임을 가로 640에 맞추면 그림은 640×360입니다.
+      정사각 640×640에 넣으면 <strong>위아래 280줄</strong>이 레터박스 여백이고, 검출기는 그 여백까지 합성곱을 돌립니다.
+    </p>
+  </div>
+
+  <div class="framefig">
+    <figure>
+      <svg viewBox="0 0 240 240" role="img" aria-label="640×640 정사각 입력. 16:9 그림 위아래로 넓은 회색 레터박스 여백이 있다">
+        <rect x="20" y="20" width="200" height="200" fill="none" stroke="var(--line-strong)"/>
+        <rect x="20" y="20" width="200" height="43.75" fill="var(--c-base)" opacity=".35"/>
+        <rect x="20" y="176.25" width="200" height="43.75" fill="var(--c-base)" opacity=".35"/>
+        <rect x="20" y="63.75" width="200" height="112.5" fill="var(--bg)" stroke="var(--c1)" stroke-width="1.4"/>
+        <circle cx="120" cy="100" r="11" fill="var(--c1)" opacity=".55"/>
+        <path d="M98 176 q0-44 22-44 q22 0 22 44 z" fill="var(--c1)" opacity=".55"/>
+        <text x="120" y="45" text-anchor="middle" font-size="9" fill="var(--ink-2)">여백</text>
+        <text x="120" y="201" text-anchor="middle" font-size="9" fill="var(--ink-2)">여백</text>
+        <text x="20" y="14" font-size="9" fill="var(--ink-3)">640×640 정사각</text>
+        <text x="220" y="234" text-anchor="end" font-size="8.5" fill="var(--ink-3)">여백 280줄</text>
+      </svg>
+      <figcaption><b>이전 · 640×640</b>16:9 그림(640×360) 위아래에 레터박스 여백이 붙습니다.</figcaption>
+    </figure>
+    <figure>
+      <svg viewBox="0 0 240 240" role="img" aria-label="640×384 직사각 입력. 16:9 그림에 얇은 여백만 남는다">
+        <rect x="20" y="60" width="200" height="120" fill="none" stroke="var(--line-strong)"/>
+        <rect x="20" y="60" width="200" height="3.75" fill="var(--c-base)" opacity=".35"/>
+        <rect x="20" y="176.25" width="200" height="3.75" fill="var(--c-base)" opacity=".35"/>
+        <rect x="20" y="63.75" width="200" height="112.5" fill="var(--bg)" stroke="var(--c1)" stroke-width="1.4"/>
+        <circle cx="120" cy="100" r="11" fill="var(--c1)" opacity=".55"/>
+        <path d="M98 176 q0-44 22-44 q22 0 22 44 z" fill="var(--c1)" opacity=".55"/>
+        <text x="20" y="54" font-size="9" fill="var(--ink-3)">640×384 직사각</text>
+        <text x="220" y="194" text-anchor="end" font-size="8.5" fill="var(--ink-3)">여백 24줄</text>
+      </svg>
+      <figcaption><b>이후 · 640×384</b>같은 그림에 여백은 24줄만 남고, 입력 화소가 40% 줄어듭니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= 본문 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">작업</span>
+    <h2>학습 파이프라인 수정 → 측정 → 사후 재검토</h2>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4><span class="bn">01 &mdash;</span> 비정사각 학습을 직접 붙였습니다</h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>Ultralytics는 학습 입력 크기를 한 값(정사각)으로만 받고, 직사각 배치(rect)는 멀티 GPU 학습에서 꺼집니다. 학습은 정사각, 추론만 직사각으로 하면 학습과 추론의 입력 분포가 어긋납니다.</p></div>
+        <div><span class="tag">접근</span><p>증강 캔버스의 높이를 에폭마다 바꿔 직사각 입력으로 학습하는 <b>커스텀 트레이너</b>를 작성했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">02 &mdash;</span> 증강 단계에서 라벨이 사라지던 문제</h4>
+      <div class="pab">
+        <div><span class="tag">문제</span><p>학습 후반 모자이크 증강이 꺼진 구간에서 원본 이미지가 잘려, 잘린 쪽의 <b>박스와 키포인트가 사라지는</b> 현상을 찾았습니다.</p></div>
+        <div><span class="tag">접근</span><p>아핀 변환 <b>앞</b>에서 레터박스를 먼저 맞추도록 순서를 바꿔, 그림이 캔버스 밖으로 잘리지 않게 했습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">03 &mdash;</span> GPU가 아니라 배포 환경(CPU)으로 판단</h4>
+      <div class="pab">
+        <div><span class="tag">관찰</span><p>GPU에서 배치 1로 재면 해상도를 줄여도 지연이 거의 같았습니다. 지연의 <b>77.6%</b>가 커널 디스패치 오버헤드라 입력 크기가 지연에 드러나지 않았습니다.</p></div>
+        <div><span class="tag r">결정</span><p>실제 배포 환경인 <b>CPU · OpenVINO INT8</b>에서 1 · 4 · 16코어로 측정해 판단했습니다.</p></div>
+      </div>
+
+      <div class="cmplegend" style="margin-top:18px">
+        <span><i style="background:var(--c-base)"></i>640×640 정사각</span>
+        <span><i style="background:var(--c1)"></i>640×384 직사각</span>
+      </div>
+      <div class="cmpbars" role="img" aria-label="연산량 6.79에서 4.07 GFLOPs로 40% 감소, CPU INT8 1코어 지연 92.2에서 54.9 밀리초로 40.4% 감소">
+        <div class="lbl">GFLOPs</div>
+        <div class="pair">
+          <div class="bar"><span class="fill" style="width:100%;background:var(--c-base)"></span><span class="val">6.79</span></div>
+          <div class="bar after"><span class="fill" style="width:59.9%;background:var(--c1)"></span><span class="val">4.07 <span class="delta">−40%</span></span></div>
+        </div>
+        <div class="lbl">CPU 1코어 ms</div>
+        <div class="pair">
+          <div class="bar"><span class="fill" style="width:100%;background:var(--c-base)"></span><span class="val">92.2</span></div>
+          <div class="bar after"><span class="fill" style="width:59.5%;background:var(--c1)"></span><span class="val">54.9 <span class="delta">−40.4%</span></span></div>
+        </div>
+      </div>
+      <p class="media-note">CPU 지연은 OpenVINO INT8 · 1코어 기준입니다. 4코어 · 16코어에서도 감소폭은 약 40%로 비슷했습니다.</p>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">04 &mdash;</span> 결과와 사후 재검토 <span class="when">2026.10.03</span></h4>
+      <ul class="blist">
+        <li><span><b>정확도</b> — 같은 조건의 정사각 모델 대비 얼굴 AP50 <b>−0.0065</b>, 사람 AP50 <b>−0.002 이내</b>. 다만 16px 미만의 아주 작은 얼굴은 손실이 더 컸습니다.</span></li>
+        <li><span><b>재검토</b> — 결과를 정리한 뒤 다시 검토하다가 커스텀 트레이너의 증강 버그를 스스로 찾아, 처음 보고한 정확도 대가를 바로잡았습니다.</span></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MEDIA ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">화면</span>
+    <h2>증강 샘플</h2>
+    <p class="lede">공개 이미지로 새로 만들어 넣을 자리입니다.</p>
+  </div>
+  <div class="media">
+    <div class="ph wide">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">그림</span>
+      <span class="ph-t">레터박스 교정 전후 증강 샘플 — 잘려서 사라지던 박스 · 키포인트가 남는 모습. 공개 이미지로 제작 예정</span>
+      <span class="ph-n">aug-before-after.webp</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>

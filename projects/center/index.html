@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Center — AI 코딩 에이전트 지휘 보드 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · center</span>
+  <h1 class="ptitle">Center — AI 코딩 에이전트 지휘 보드</h1>
+  <div class="pmeta">
+    <span>2026.08 ~ 진행 중 · 개인 프로젝트 · 1인 개발</span>
+    <span class="live">업무에 매일 사용 중</span>
+  </div>
+
+  <p class="pitch">
+    Claude Code · Codex 같은 AI 코딩 에이전트 세션 10여 개를 동시에 돌리면서,
+    <strong>어느 세션이 무엇을 하고 어느 세션이 사람의 답을 기다리는지</strong>를 한 화면에서 보고 지시하려고 만든 웹앱입니다.
+    클릭 한 번으로 세션을 다시 여는 런처에서 시작해 웹 터미널 타일 뷰를 거쳐 지휘 보드로 키웠습니다.
+  </p>
+
+  <dl class="factsheet">
+    <dt>기간</dt>
+    <dd>2026.08.26 런처 → 08.27 타일 뷰 → 09.30 지휘 보드 → 진행 중</dd>
+    <dt>형태</dt>
+    <dd>Windows · WSL에서 도는 로컬 웹앱 — Python 표준 라이브러리 백엔드(약 5,500줄, API 약 50개), 보드와 대화창 두 화면, tmux로 세션 유지</dd>
+    <dt>역할</dt>
+    <dd>1인 개발 — 설계, 백엔드 · 프런트 구현, Windows 설치기</dd>
+    <dt>기술</dt>
+    <dd>Python · tmux · WSL · 웹 터미널 · Slurm 연동 · 데스크톱 알림</dd>
+  </dl>
+
+  <div class="stats three">
+    <div class="stat">
+      <span class="k">세션</span>
+      <span class="v">77<em> 개</em></span>
+      <span class="d">지휘 보드 첫 14일(09.30 ~ 10.13)에 만든 세션</span>
+    </div>
+    <div class="stat">
+      <span class="k">지시 전달</span>
+      <span class="v">845<em> 건</em></span>
+      <span class="d">총괄 세션을 거친 지시 113건은 전부 처리</span>
+    </div>
+    <div class="stat">
+      <span class="k">승인 카드</span>
+      <span class="v">67<em> 건</em></span>
+      <span class="d">그중 사람이 직접 누른 응답 54건</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 문제 정의 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">배경</span>
+    <h2>세션이 열 개를 넘으면 생기는 일</h2>
+    <p class="lede">
+      에이전트 하나는 터미널 하나로 충분했지만, 업무 · 실험 · 측정을 나눠 동시에 돌리자
+      <strong>사람이 병목</strong>이 됐습니다.
+    </p>
+  </div>
+
+  <div class="blocks">
+    <div class="block">
+      <h4><span class="bn">01 &mdash;</span> 무엇이 불편했나</h4>
+      <ul class="blist">
+        <li><span><b>누가 기다리는지 모름</b> — 어느 세션이 권한 승인이나 선택을 기다리는지 일일이 창을 돌며 확인해야 했습니다.</span></li>
+        <li><span><b>무엇을 하는지 모름</b> — 세션마다 지금 하는 일과 언제 멈췄는지를 알기 어려웠습니다.</span></li>
+        <li><span><b>다시 열기가 번거로움</b> — 창을 닫거나 재부팅하면 세션 ID를 찾아 붙여 다시 열어야 했습니다.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 본문 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">작업</span>
+    <h2>기능 → 설계 결정 → 개선 이력</h2>
+  </div>
+
+  <div class="blocks">
+
+    <div class="block">
+      <h4><span class="bn">02 &mdash;</span> 주요 기능</h4>
+      <ul class="blist">
+        <li><span><b>세션 보드</b> — 카테고리별 픽셀 캐릭터가 상태(작업 중 · 대기 · 입력 필요 · 꺼짐)를 표정으로 보여 줍니다. 여러 개를 골라 한꺼번에 지시 · 이동 · 종료합니다.</span></li>
+        <li><span><b>처리함</b> — 터미널 화면에서 권한 · 선택 · 폴더 신뢰 · 턴 끝 질문을 감지해 버튼으로 답하게 하고, 데스크톱 알림을 띄웁니다.</span></li>
+        <li><span><b>총괄 세션 · 지시함</b> — 총괄 에이전트가 사용자 지시를 담당 세션에 전달하고, 연결이 끊기면 경고합니다.</span></li>
+        <li><span><b>세션 간 협업 API</b> — 의견만 구하는 검토와 일을 맡기는 위임을 나누고, 공용 자원은 주인 세션 하나만 바꿀 수 있게 했습니다.</span></li>
+        <li><span><b>지식 증류 · 주입</b> — 세션을 닫기 전에 인수인계 카드로 증류하고, 새 세션을 열 때 골라 넣습니다.</span></li>
+        <li><span><b>운영</b> — 재부팅 후 세션 복구, 자동 재기동 감시, GPU 잡(Slurm) 배지, 메모리 막대와 정리 추천, 사용량 대시보드, 원격 서버(ssh) 세션.</span></li>
+        <li><span><b>배포</b> — Windows 원클릭 설치기(11단계, 업데이트 모드). 배포판을 빌드할 때 개인정보 · 내부 주소 금지어를 검사합니다.</span></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">03 &mdash;</span> 설계 결정 3가지</h4>
+
+      <p><b>① 위험한 동작은 사람이 누른 응답만 승인으로 인정</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>삭제 · 배포 · 재시작이 필요하면 세션이 <b>승인 카드</b>를 올리고, 사람이 보드에서 직접 누른 응답만 승인으로 받습니다. 스크립트나 다른 세션이 대신 누른 응답은 승인으로 치지 않습니다.</p></div>
+        <div><span class="tag r">이유</span><p>에이전트가 여러 개일수록 "누군가 허락했겠지"라는 착각이 생기기 쉽습니다. 승인 출처를 기록에 남겨 구분했습니다.</p></div>
+      </div>
+
+      <p style="margin-top:22px"><b>② 바깥에서 들어온 글은 사람이 확인한 뒤에만 규칙으로</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>웹에서 가져온 내용으로 만든 규칙 카드는 사람이 승인해야 다른 세션에 주입됩니다.</p></div>
+        <div><span class="tag r">이유</span><p>증류 · 주입 경로가 그대로 프롬프트 주입 경로가 될 수 있어서입니다.</p></div>
+      </div>
+
+      <p style="margin-top:22px"><b>③ 서로 기다리다 멈추지 않게</b></p>
+      <div class="pab" style="margin-top:10px">
+        <div><span class="tag">결정</span><p>A가 B에게 묻는 동안 B가 A에게 보낸 요청이 남아 있으면 새 요청을 즉시 돌려보내고, 알림만 필요한 요청은 답을 기다리지 않게 했습니다.</p></div>
+        <div><span class="tag r">이유</span><p>세션끼리 서로의 답을 기다리면 둘 다 시간 초과로 끝나는 교착이 실제로 생겼습니다.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">04 &mdash;</span> 날짜별 개선</h4>
+      <ul class="blist">
+        <li><span><b>08.26</b> — 클릭 한 번 세션 재실행 런처</span></li>
+        <li><span><b>08.27</b> — 웹 터미널 타일 뷰</span></li>
+        <li><span><b>09.14</b> — Codex 세션 지원</span></li>
+        <li><span><b>09.18</b> — 세션 증류 → 지식 카드 주입</span></li>
+        <li><span><b>09.24</b> — tmux와 원격 제어로 세션 유지</span></li>
+        <li><span><b>09.30</b> — 지휘 보드: 처리함 · 사용량 · 복구 · Slurm · 예약</span></li>
+        <li><span><b>10.01</b> — 여러 엔진 · 협업 API · 대화창 · 자동 재기동</span></li>
+        <li><span><b>10.02</b> — 승인 카드 · 교착 방지</span></li>
+        <li><span><b>10.07</b> — Windows 설치기 · 가이드</span></li>
+        <li><span><b>10.08</b> — 다중 선택 · 메모리 막대 · 배포판과 운영 코드 통일 · 원격 세션</span></li>
+        <li><span><b>10.13</b> — 중복 실행 방지</span></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h4><span class="bn">05 &mdash;</span> 쓰면서 나온 숫자 <span class="when">2026.09.30 ~ 10.13 · 14일</span></h4>
+      <ul class="blist">
+        <li><span><b>세션 77개</b> — 업무 21 · 측정 실험 47 · 시험 9</span></li>
+        <li><span><b>지시 전달 845건</b> — 총괄 세션을 거친 지시 113건은 전부 처리</span></li>
+        <li><span><b>승인 카드 67건</b> — 사람이 직접 누른 응답 54건</span></li>
+        <li><span><b>동시 작업 세션</b> — 평상시 최대 8개</span></li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MEDIA ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">화면</span>
+    <h2>화면</h2>
+    <p class="lede">업무 세션 이름이 보이지 않도록 시험용 세션만 띄워 새로 촬영할 자리입니다.</p>
+  </div>
+  <div class="media">
+    <div class="ph wide">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">스크린샷</span>
+      <span class="ph-t">세션 보드 — 상태별 캐릭터와 처리함. 시험 세션으로 촬영 예정</span>
+      <span class="ph-n">board.webp</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">스크린샷</span>
+      <span class="ph-t">승인 카드 — 세션이 올린 배포 승인 요청. 시험 세션으로 촬영 예정</span>
+      <span class="ph-n">approval.webp</span>
+    </div>
+    <div class="ph">
+      <svg width="46" height="34" viewBox="0 0 46 34" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="44" height="32" stroke="var(--line-strong)" stroke-dasharray="3 3"/>
+        <path d="M1 10V1h9M36 1h9v9M45 24v9h-9M10 33H1v-9" stroke="var(--accent)" stroke-width="2"/>
+      </svg>
+      <span class="ph-k">스크린샷</span>
+      <span class="ph-t">대화창과 메모리 막대. 시험 세션으로 촬영 예정</span>
+      <span class="ph-n">chat-memory.webp</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>
