@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F10">
 <meta name="robots" content="noindex">
 <title>집중 스프린트 — 탐지 모델 라인 총점검 · 진경원</title>
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 
+<a class="skip" href="#main">본문 바로가기</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="/">&larr; kwjin.dev</a>
@@ -22,7 +24,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
 
 <!-- ================= HERO ================= -->
 <section class="phero wrap">
@@ -158,7 +160,7 @@
       <h4><span class="bn">04 &mdash;</span> VLM 활용성 평가 — 쓸 수 있나, 없나</h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>대규모 자동검수에 VLM 제로샷 판정을 쓸 수 있는지 판단이 필요했습니다.</p></div>
-        <div><span class="tag">접근</span><p>Qwen2.5-VL로 제로샷 판정 실험을 돌렸습니다. 초기 프롬프트('기기 여부')는 사실상 무작위 수준(AUROC <b>0.504</b>)이었는데, 질문을 <b>'촬영 가능한 렌즈면이 보이는가'</b>로 재정의하자 AUROC <b>0.762</b>로 반전했습니다 — 모델 능력이 아니라 질문 정의가 병목이었습니다.</p></div>
+        <div><span class="tag">접근</span><p>Qwen2.5-VL로 제로샷 판정 실험을 돌렸습니다. 초기 프롬프트(‘기기 여부’)는 사실상 무작위 수준(AUROC <b>0.504</b>)이었는데, 질문을 <b>‘촬영 가능한 렌즈면이 보이는가’</b>로 재정의하자 AUROC <b>0.762</b>로 반전했습니다 — 모델 능력이 아니라 질문 정의가 병목이었습니다.</p></div>
         <div><span class="tag r">결과</span><p>그럼에도 대규모 자동검수에는 부적합하다는 결론. 같은 태스크에서 경량 전용 분류기가 추론은 <b>70배</b> 빠르고 정확도도 높았습니다(AUROC <b>0.99</b> vs 0.762).</p></div>
       </div>
     </div>
