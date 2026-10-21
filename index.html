@@ -397,7 +397,7 @@
   <div class="wrap foot">
     <span class="stackline">YOLO v8–v26 · Pose/Keypoint · OpenVINO INT8(NNCF) · RKNN · Auto Labeling</span>
     <span class="footmeta">
-      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중 · 4년 5개월<br>
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중 · <span data-since="2022-03">4년 7개월</span><br>
       <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
     </span>
   </div>
@@ -473,6 +473,18 @@
       div.querySelector("p").textContent = r.d;
       tl.appendChild(div);
     });
+  }
+
+  /* ---------- 재직 기간: 시작 달부터 오늘까지 개월 수(HTML 값은 스크립트가 없을 때의 대비) ---------- */
+  var since = document.querySelectorAll("[data-since]");
+  for (var i = 0; i < since.length; i++) {
+    var ym = since[i].getAttribute("data-since").split("-");
+    var now = new Date();
+    var months = (now.getFullYear() - Number(ym[0])) * 12 + (now.getMonth() + 1 - Number(ym[1]));
+    if (months >= 0) {
+      var y = Math.floor(months / 12), m = months % 12;
+      since[i].textContent = (y ? y + "년" : "") + (y && m ? " " : "") + (m || !y ? m + "개월" : "");
+    }
   }
 })();
 </script>
