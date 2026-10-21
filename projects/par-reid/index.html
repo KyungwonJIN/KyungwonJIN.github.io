@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F10">
+<meta name="robots" content="noindex">
+<title>CCTV 재식별 · 보행자 속성 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
+      <a href="/projects/synth-data/">합성 데이터</a>
+      <a href="/projects/center/">Center</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · par-reid</span>
+  <h1 class="ptitle">CCTV 사람 재식별(ReID) · 보행자 속성(PAR) 고도화</h1>
+  <div class="pmeta">
+    <span>2026.08.31 인수 ~ 진행 중 · 단독 담당</span>
+    <span class="live">배포 후보 완성 · 검수 중</span>
+  </div>
+
+  <p class="pitch">
+    여러 카메라에서 같은 사람을 찾는 ReID와, 성별 · 옷 · 소지품 같은 속성 38개를 읽는 PAR을 넘겨받아 다시 세웠습니다.
+    라벨 없는 여름 데이터는 카메라 간 군집으로 의사 라벨을 만들고, <strong>판정 기준을 결과보다 먼저 적어 둔 뒤</strong> 2~3시드 평균으로만 판단했습니다.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="k">ReID · DukeMTMC-reID mAP</span>
+      <span class="v">81.9 → 87.1</span>
+      <span class="d">Rank-1 89.9 → 93.2</span>
+    </div>
+    <div class="stat">
+      <span class="k">ReID · Market-1501 mAP</span>
+      <span class="v">91.6 → 92.8</span>
+      <span class="d">Rank-1 96.3 → 96.2</span>
+    </div>
+    <div class="stat">
+      <span class="k">PAR · 공개 4종 합본 mA</span>
+      <span class="v">86.0 → 87.6</span>
+      <span class="d">F1 89.3 → 89.8</span>
+    </div>
+    <div class="stat">
+      <span class="k">추론 속도(ONNX fp16)</span>
+      <span class="v">×1.5 · ×2</span>
+      <span class="d">ReID · PAR, 기존 배포 모델 대비</span>
+    </div>
+  </div>
+  <p class="media-note">왼쪽 값은 인수 시점 배포 모델, 오른쪽은 새 후보. 공개 벤치마크 기준.</p>
+
+  <dl class="factsheet">
+    <dt>과제</dt>
+    <dd>ReID — 여러 카메라에서 같은 사람 찾기(검색 · 동선 추적) / PAR — 성별 · 나이대 · 체형 · 머리 · 상하의 · 신발 · 소지품 · 행동 등 이진 속성 38개</dd>
+    <dt>데이터</dt>
+    <dd>공개: Market-1501 · DukeMTMC-reID / PA-100K · RAPv2 · PETA · MSP60K 합본. 사내: 실내외 카메라에서 자동 수집한 사람 crop(여름), 사람이 검수한 평가셋</dd>
+    <dt>모델</dt>
+    <dd>ReID — PE-Core-L/14 + CLIP-ReID 식 2단계 학습, 입력 336×112 / PAR — PE-Core-B/16 + 속성별 어텐션 풀 질의 + 텍스트로 초기화한 분류기</dd>
+    <dt>흐름</dt>
+    <dd>08.31 인수 → 09.30 벤치 재현 → 10.02~05 집중 고도화 → 10.12 후속 실험 → 배포 검토</dd>
+    <dt>역할</dt>
+    <dd>단독 담당 — 실험 설계 · 판정 기준 사전 등록 · 결과 검수 · 문서화, 실행은 자동화 에이전트로 병렬화</dd>
+  </dl>
+</section>
+
+<!-- ================= 판단 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">핵심</span>
+    <h2>성능보다 먼저 정한 여섯 가지</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">라이선스부터 — 백본 교체</span>
+        <span class="w">기존 백본의 사전학습 데이터가 비상업 조건인 것을 발견하고 Apache-2.0 백본(Perception Encoder)으로 전환. 후보로 SigLIP2 · DINOv2 · 기존 백본 재학습도 비교.</span></div>
+      <span class="m">Apache-2.0</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">속도 상한을 먼저 정하고 입력 크기로 맞춤</span>
+        <span class="w">PyTorch 기준 기존 대비 1.5배 이내를 넘지 않게 ReID 입력을 336×112로 줄임. 배포 형식인 ONNX fp16에서는 오히려 기존보다 빠름.</span></div>
+      <span class="m">ONNX ×1.5 · ×2</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">판정 기준은 결과보다 먼저</span>
+        <span class="w">무엇을 넘으면 채택인지 실험 전에 기록. 2~3시드 평균, 마지막 epoch만 사용 — 벤치마크 점수로 epoch를 고르지 않음.</span></div>
+      <span class="m">사전 등록</span>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">누출 차단</span>
+        <span class="w">평가에 쓰는 날짜 · 인물, 그리고 외형이 가까운 사람까지 학습에서 제외.</span></div>
+    </li>
+    <li>
+      <span class="n">05</span>
+      <div><span class="h">의사 라벨은 두 대 이상 카메라에 걸친 군집만</span>
+        <span class="w">라벨 없는 여름 데이터를 배포 모델 특징으로 날짜 안에서 카메라 간 군집. 임계값은 자동 얼굴 라벨로 맞추고, 사람 검수(무작위 40 ID)로 정밀도를 확인.</span></div>
+      <span class="m">정밀도 ≥ 97.5%</span>
+    </li>
+    <li>
+      <span class="n">06</span>
+      <div><span class="h">PAR — 텍스트는 학습 때만</span>
+        <span class="w">속성마다 이미지에서 따로 질의하는 어텐션 풀과, 속성 이름의 텍스트 임베딩으로 초기화한 분류기. 추론은 이미지만 써서 배포 형상은 그대로.</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 결과 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">결과</span>
+    <h2>공개 벤치마크와 사내 조건</h2>
+  </div>
+  <div class="tbl-wrap">
+    <table class="data">
+      <thead><tr><th scope="col">공개 벤치마크</th><th scope="col">기존 배포</th><th scope="col">새 후보</th><th scope="col">차이</th></tr></thead>
+      <tbody>
+        <tr class="win"><td>ReID · DukeMTMC-reID mAP</td><td>81.9</td><td>87.1</td><td>+5.2</td></tr>
+        <tr><td>ReID · DukeMTMC-reID Rank-1</td><td>89.9</td><td>93.2</td><td>+3.3</td></tr>
+        <tr><td>ReID · Market-1501 mAP</td><td>91.6</td><td>92.8</td><td>+1.2</td></tr>
+        <tr class="lose"><td>ReID · Market-1501 Rank-1</td><td>96.3</td><td>96.2</td><td>−0.1</td></tr>
+        <tr><td>ReID · Market-1501 mAP (재순위 적용)</td><td>94.6</td><td>94.8</td><td>+0.2</td></tr>
+        <tr><td>PAR · 공개 4종 합본 mA</td><td>86.0</td><td>87.6</td><td>+1.6</td></tr>
+        <tr><td>PAR · 공개 4종 합본 F1</td><td>89.3</td><td>89.8</td><td>+0.5</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <ol class="kp" style="margin-top:26px">
+    <li>
+      <span class="n">사내</span>
+      <div><span class="h">공개 벤치보다 사내 조건에서 더 크게 올랐다</span>
+        <span class="w">ReID 사내 평균 mAP 약 +3점, 여름 실외 +16~20점. PAR 사내 mA 약 +4.6점. (사내 절대 수치는 공개하지 않음)</span></div>
+      <span class="m">여름 실외 +16~20</span>
+    </li>
+    <li>
+      <span class="n">일반화</span>
+      <div><span class="h">처음 보는 카메라 · 처음 보는 현장에서도 유지</span>
+        <span class="w">특정 카메라를 빼고 학습해 그 카메라로 재는 시험에서 ReID +10점, 공개셋만으로 학습해 사내 현장에서 재는 시험에서 PAR +3점.</span></div>
+      <span class="m">+10 · +3</span>
+    </li>
+    <li>
+      <span class="n">접음</span>
+      <div><span class="h">효과 없어 접은 것</span>
+        <span class="w">의사 라벨 2회차, 큰 모델 → 작은 모델 증류, 카메라 임베딩(SIE), 7속성 전용 학습, 속성 묶음별 모델 분할.</span></div>
+    </li>
+    <li>
+      <span class="n">지금</span>
+      <div><span class="h">배포 후보 패키지 완성</span>
+        <span class="w">ONNX와 명세까지 만들었고, 법무 확인과 사람 검수를 거쳐 배포를 결정.</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 막힌 것 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">시행착오</span>
+    <h2>막힌 것 → 바꾼 것</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">여름 데이터에 라벨이 없음</span>
+        <span class="w">→ 배포 모델 특징으로 카메라 간 군집 의사 라벨, 자동 얼굴 라벨로 임계값을 맞추고 사람이 무작위 40 ID를 검수(정밀도 97.5% 이상).</span></div>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">평가가 같은 건물 안이라 일반화를 알 수 없음</span>
+        <span class="w">→ ‘처음 보는 카메라’(특정 카메라를 빼고 학습) · ‘처음 보는 현장’(공개셋만 학습) 대리 시험을 더해 이점이 유지되는지 확인.</span></div>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">시드 흔들림을 작게 잡고 있었음 — 샘플러가 epoch로만 섞임</span>
+        <span class="w">→ 데이터 순서까지 시드에 묶어 다시 학습, 결론이 유지됨을 확인. 이 과정에서 라이선스 위험도 발견해 백본을 바꿈.</span></div>
+    </li>
+  </ol>
+  <p class="media-note">사람 사진이 들어간 자료는 싣지 않았습니다. 공개 벤치마크 수치는 그대로, 사내 데이터는 차이(점)로만 적었습니다.</p>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
+    <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>
