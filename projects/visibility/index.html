@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F10">
+<meta name="robots" content="noindex">
+<title>키포인트 가림 학습 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/par-reid/">PAR·ReID</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/center/">Center</a>
+      <a href="/projects/tamper/">화면이동탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/synth-data/">합성 데이터</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · visibility</span>
+  <h1 class="ptitle">키포인트 가림(visibility) 학습 — 합성 가림에서 학습 라벨 오류까지</h1>
+  <div class="pmeta">
+    <span>2026.09 ~ 진행 중</span>
+    <span class="live">기본 모델 교체는 실사용 시험 후 결정</span>
+  </div>
+
+  <p class="pitch">
+    손이나 컵으로 입을 가려도 웹캠 얼굴 · 사람 7점 포즈 모델은 입꼬리를 ‘보임’으로 냈습니다. 합성 가림으로 공개 실사 가림 판별력은 끌어올렸지만 실제 손 가림은 계속 놓쳤고,
+    원인을 하나씩 걷어낸 끝에 <strong>제품 도메인 학습 얼굴의 9.6%가 손 가림인데 ‘보임’으로 라벨돼 있던 것</strong>을 찾았습니다.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="k">입가림 오라벨 후보</span>
+      <span class="v">9.6<em>%</em></span>
+      <span class="d">웹캠 착석 환경 학습 얼굴 중</span>
+    </div>
+    <div class="stat">
+      <span class="k">후보 검수 확정률</span>
+      <span class="v">95.8<em>%</em></span>
+      <span class="d">먼저 검수한 후보 중 실제 입가림</span>
+    </div>
+    <div class="stat">
+      <span class="k">실사 가림 판별 wiROC</span>
+      <span class="v">0.637 → 0.894</span>
+      <span class="d">공개 COFW · 합성 가림 학습 후</span>
+    </div>
+    <div class="stat">
+      <span class="k">손 입가림 억제</span>
+      <span class="v">0.998 → 0.221</span>
+      <span class="d">모든 모델이 놓치던 자세의 입꼬리 신뢰도(예)</span>
+    </div>
+  </div>
+
+  <dl class="factsheet">
+    <dt>모델</dt>
+    <dd>YOLO11n 얼굴 · 사람 7점 포즈(눈 · 입꼬리 · 코 · 어깨 · 팔꿈치 · 손목) — 화면이동탐지에서 사람 영역을 빼는 데 쓰이고, 키포인트마다 보임 신뢰도를 냄</dd>
+    <dt>데이터</dt>
+    <dd>실물 가리개 조각으로 만든 합성 가림 8만 장 · 상업 이용 가능한 공개 데이터에서 다시 뽑은 손 조각 1,206개(전수 육안 검수 2회) · 공개 실사 가림 데이터 COFW</dd>
+    <dt>역할</dt>
+    <dd>실험 설계 · 가림 합성 데이터와 손 라이브러리 구축 · 라벨 감사 · 검수 화면 개발 · 학습 · 평가</dd>
+    <dt>이어진 것</dt>
+    <dd>같은 모델의 CPU 경량화 → <a href="/projects/rect-input/">비정사각 입력</a> · 라벨 수정 모델 → <a href="/projects/tamper/">화면이동탐지</a>의 사람 검출</dd>
+  </dl>
+</section>
+
+<!-- ================= 추적 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">추적</span>
+    <h2>안 풀리는 이유를 하나씩 걷어냄</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">합성 가림 8만 장 — 공개 실사에서도 통했다</span>
+        <span class="w">손 · 컵 · 휴대폰 같은 실물 가리개로 키포인트를 조준해 가리고, 가린 점만 ‘안 보임’으로. 생성기를 외운 게 아님을 공개 COFW로 확인(wiROC 0.637 → 0.894), 위치 오차 · 박스 탐지 회귀 없음.</span></div>
+      <span class="m">wiROC 0.894</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">그래도 웹캠 앞 손 가림은 그대로 — 큰 얼굴이 분포 밖</span>
+        <span class="w">같은 크롭에서 입력만 낮추자(얼굴 400 → 200px) 손가림 억제율 0.452 → 0.830. 정보를 줄였는데 오른 것이라 분포 문제.</span></div>
+      <span class="m">0.45 → 0.83</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">피부톤 가설은 인과 실험으로 기각</span>
+        <span class="w">손 색을 얼굴 피부톤으로 바꿔도 손만 약한 현상이 그대로 → 색 맞춤 증강은 착수하지 않음.</span></div>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">손 조각만 작고 반투명했다</span>
+        <span class="w">불투명 비율 0.57(다른 가리개 0.81~0.82). 얼굴에 닿은 손은 통째로 버리는 규칙 탓에 ‘손으로 얼굴을 가린’ 조각이 0. 공개 데이터에서 다시 뽑아 재구축 — 회귀는 없었지만 실사 손 억제는 여전히 낮음.</span></div>
+    </li>
+    <li>
+      <span class="n">05</span>
+      <div><span class="h">진짜 뿌리 — 제품 도메인 학습 라벨</span>
+        <span class="w">합성 검수 중, 놓친 가림이 붙인 손이 아니라 원본에 찍힌 실제 손인 것을 발견. 입꼬리 근처에 입이 검출되지 않는 신호로 규모를 재니 학습 얼굴의 9.6%. 합성이 ‘가리면 안 보임’을 가르치는 동안 실제 사진 수천 장이 ‘가려도 보임’을 가르치고 있었다.</span></div>
+      <span class="m">9.6%</span>
+    </li>
+    <li>
+      <span class="n">06</span>
+      <div><span class="h">검수 화면 → 라벨 수정 재학습</span>
+        <span class="w">보임 · 가림 · 불명 단추와 키보드 흐름. 모델 예측 미리 채우기가 기본값 편향을 만들어 기본을 ‘불명’으로. 검수분은 고치고 미검수 후보는 빼서 재학습 → 모든 모델이 놓치던 손 입가림 네 자세를 처음으로 억제.</span></div>
+      <span class="m">0.998 → 0.221</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 검증 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">검증</span>
+    <h2>점수를 믿지 않은 세 번</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">검증셋에 가림 라벨이 0개</span>
+        <span class="w">가림을 잘 배울수록 검증 손실이 오히려 올라감 → 그 지표는 판정에서 뺌.</span></div>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">‘mAP 0.99’의 정체</span>
+        <span class="w">군중 · 일반 · 웹캠이 섞인 검증셋에서 0.97을 넘는 건 웹캠 부분 하나뿐이고 전체는 0.81. 얼굴 정답 대부분이 군중의 아주 작은 얼굴이라 평균이 도메인 성능을 말해 주지 않았다.</span></div>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">검증 인물이 학습 인물과 100% 겹침</span>
+        <span class="w">웹캠 쪽 만점은 같은 사람 · 같은 책상을 외운 값. 판정을 학습에서 뺀 8명 홀드아웃과 실사용 시험으로 옮김.</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 결과 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">결과</span>
+    <h2>이득은 대부분 라벨 수정에서</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">임계 0.7이 기존 0.9를 대신한다</span>
+        <span class="w">학습에서 뺀 8명 홀드아웃에서, 라벨을 고친 새 모델의 임계 0.7 지점이 기존 모델 0.9 지점과 비슷한 입꼬리 가림 recall에 오억제는 약 1/3 적음. 같은 길이로 다시 학습해 비교한 것이라, 이득 대부분은 학습 길이가 아니라 라벨 수정에서 나옴.</span></div>
+      <span class="m">권고 0.9 → 0.7</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">떨어진 지표를 오진하지 않기</span>
+        <span class="w">라벨 수정 뒤 얼굴 지표 급락이 가림 억제의 부작용처럼 보였지만, 억제를 안 배운 눈 · 코도 똑같이 떨어졌다. 원인은 16px 미만 작은 얼굴 검출 — 기존 모델도 같은 수준이라 별도 과제로 분리.</span></div>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">기각한 것</span>
+        <span class="w">얼굴 전용 1클래스(입꼬리를 눈과 맞바꿈), 포즈 모델의 P5 제거(관절 정밀도 −14.5%, 입꼬리 오억제 급증) → 경량화 후보도 가시성 축을 먼저 통과해야 한다는 기준.</span></div>
+    </li>
+    <li>
+      <span class="n">남음</span>
+      <div><span class="h">눈 가림 · 검증셋 라벨 · 작은 얼굴</span>
+        <span class="w">사람이 검수한 눈 가림은 입꼬리의 1/44뿐이라 눈 가림은 아직 못 배움. 검증셋 가림 라벨 수정, 작은 얼굴 검출, 기본 모델 교체와 임계 결정이 남음.</span></div>
+    </li>
+  </ol>
+  <p class="media-note">사내 데이터는 비율 · 상대 비교로만 적었고, 사람 얼굴이 나오는 자료는 싣지 않았습니다. COFW는 공개 데이터입니다.</p>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/par-reid/">PAR·ReID — 보행자 속성 · 사람 재식별 고도화</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+    <a href="/projects/tamper/">화면이동탐지 — 카메라 이동 · 가림 규칙 엔진</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>

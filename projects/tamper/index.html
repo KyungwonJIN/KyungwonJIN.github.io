@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F10">
+<meta name="robots" content="noindex">
+<title>화면이동탐지 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/visibility/">가림 학습</a>
+      <a href="/projects/par-reid/">PAR·ReID</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/center/">Center</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/synth-data/">합성 데이터</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · tamper</span>
+  <h1 class="ptitle">화면이동탐지 — 카메라 이동 · 가림 규칙 엔진</h1>
+  <div class="pmeta">
+    <span>2026.08 ~ 진행 중</span>
+    <span class="live">참조 엔진 전달 · 2026.09.21</span>
+  </div>
+
+  <p class="pitch">
+    사람이 앞에 앉아 움직이고 의자 · 물건도 오가는 화면에서, 카메라를 밀거나 렌즈를 가린 순간만 GPU 없이 0.5초마다 골라내는 규칙 엔진입니다.
+    실사용 오탐을 사건마다 틱 단위로 재생해 고쳤고, <strong>측정은 다 하되 경보 권한은 직접 증거에만</strong> 준다는 원칙으로 정리했습니다.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="k">라이브 가림</span>
+      <span class="v">4 / 4</span>
+      <span class="d">의심 후 1~2초 안에 확정</span>
+    </div>
+    <div class="stat">
+      <span class="k">라이브 이동</span>
+      <span class="v">5 / 5</span>
+      <span class="d">손으로 밀기</span>
+    </div>
+    <div class="stat">
+      <span class="k">평상시 오경보</span>
+      <span class="v">0<em> / 17분</em></span>
+      <span class="d">약 2,060틱</span>
+    </div>
+    <div class="stat">
+      <span class="k">경보 권한 분리 후 오탐</span>
+      <span class="v">21 → 6</span>
+      <span class="d">라벨 사건 66건 재생 · 정탐 유지</span>
+    </div>
+  </div>
+  <p class="media-note">라이브 시험: 광각(AEW) 카메라, 2026.09.21. 한 사람이 한 자리에서 한 시험이라 오경보율을 추정하기에는 부족합니다.</p>
+
+  <dl class="factsheet">
+    <dt>방식</dt>
+    <dd>320×180으로 줄여 20×12칸, 등록 장면(앵커) · 서서히 갱신되는 배경 기억과 비교해 신호 10개 · 3틱 연속이어야 경보 · 사람 영역은 키포인트 모델 실루엣으로 제외</dd>
+    <dt>속도</dt>
+    <dd>서버 CPU 4코어 고정, 틱 처리 p50 약 36 ms — 틱 예산 500 ms의 7.3%, 대부분이 사람 검출</dd>
+    <dt>기술</dt>
+    <dd>Python · OpenCV(위상상관 · 엣지 · 라플라시안) · NumPy · OpenVINO INT8 · YOLO11n-pose</dd>
+    <dt>역할</dt>
+    <dd>오탐 원인 분석과 규칙 수정 · 재생 검증 · 광각(AEW) 정사각 프로필과 중앙 구역 가림 설계 · 참조 엔진 · 검증 세트 · 문서 작성과 전달</dd>
+  </dl>
+</section>
+
+<!-- ================= 핵심 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">핵심</span>
+    <h2>카메라가 움직였나, 사람과 물건이 움직였나</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">경보 권한은 직접 증거에만</span>
+        <span class="w">오탐의 뿌리는 하나 — 무늬 없는 구도에서 정렬이 배경 대신 사람에 붙고, 사람이 움직이면 불일치 신호가 함께 튀었다. 신호는 계속 재고 기록하되, 경보는 지속 오프셋 · 엣지 붕괴 · 선명도 붕괴 같은 직접 증거에만.</span></div>
+      <span class="m">오탐 21 → 6</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">고친 규칙은 정탐까지 다시 돌린 뒤에만 적용</span>
+        <span class="w">프레임 몇 장으로 단정했다 틀린 적도 있다 — 카메라 12px 이동으로 봤던 사건이 실제로는 의자 두 개가 움직인 것.</span></div>
+      <span class="m">정탐 소실 0</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 실사용 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">실사용</span>
+    <h2>오탐 사건 → 원인 → 수정</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">사람 박스와 실루엣 사이 여백이 배경으로 채점됨</span>
+        <span class="w">→ 실패한 칸의 46%가 그 여백. 표본에서 사람 박스 칸을 빼고, 표본이 모자라면 원래 방식으로 되돌리는 폴백. 폴백이 없으면 사람이 화면을 채울 때 강제 경보가 나는 것을 재생으로 확인.</span></div>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">사람이 비운 자리를 배경 움직임으로 셈</span>
+        <span class="w">→ 이번 틱과 직전 틱의 사람 자리를 합쳐 빼고 표본 가드. 배경이 작을 때 막는 게이트는 정탐을 잃어 기각(배경이 작다는 것 자체가 렌즈 앞 손 · 종이인 경우가 많음).</span></div>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">의자 이동 · 반입이 카메라 이동으로 승격</span>
+        <span class="w">→ 물체 이동은 앵커 불일치 0.68~0.76, 카메라 이동은 0.88~1.0이라 하한 0.85. 처음 0.82는 경보 순간 스냅샷으로는 지운 것처럼 보였지만 틱 재생에서 7.2분 뒤 재발해 올림. 실주행 경보에서 이 유형 오탐 4/4 제거.</span></div>
+      <span class="m">4 / 4 제거</span>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">사람 모델을 바꾸자 생긴 새 오탐</span>
+        <span class="w">→ <a href="/projects/visibility/">가림을 배운 새 키포인트 모델</a>이 몇 점만 잡으면 실루엣이 머리 · 팔만 덮어 몸통이 배경으로 채점됨. 실루엣이 사람 박스의 15% 미만이면 박스로 대신.</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 광각 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">광각(AEW)</span>
+    <h2>전역 값으로는 가를 수 없는 어안 가림</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">정사각 프로필, 정렬은 왜곡이 작은 중앙 60%에서만</span>
+        <span class="w">16:9로 눌러 판정하던 것을 320×320 · 20×20칸으로.</span></div>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">테두리가 남는 어안 — 중앙 구역 무늬 붕괴 비율로</span>
+        <span class="w">화면 절반 넘게 가려도 테두리가 남아 전역 엣지 잔존율은 가림 · 이동이 겹침(가림 최대 0.532, 이동 최소 0.458). 중앙 반경 50% 안 무늬 붕괴 칸 비율로는 갈림(가림 최소 0.689, 이동 최대 0.483).</span></div>
+      <span class="m">0.689 vs 0.483</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">먼저 기록만 하는 섀도 필드로 넣고 판정에 연결</span>
+        <span class="w">시나리오 11클립에서 가림 2/5 → 4/5, 이동 · 오탐 판정은 그대로.</span></div>
+      <span class="m">2/5 → 4/5</span>
+    </li>
+    <li>
+      <span class="n">전달</span>
+      <div><span class="h">참조 엔진 · 검증 세트 · 문서</span>
+        <span class="w">실험용 부속을 걷어낸 독립 참조 엔진(Python)이 실험 엔진과 1,700 / 1,700틱 일치. 바꾼 이유 · 검증 수치 · 알려진 한계 · 되돌리는 법 · 임계값 전체와 광각 클립별 기대값을 함께 넘김.</span></div>
+      <span class="m">1,700 / 1,700</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 한계 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">한계</span>
+    <h2>못 잡는 것도 문서에 그대로</h2>
+  </div>
+  <ol class="kp">
+    <li><span class="n">01</span><div><span class="h">테이프로 렌즈 절반을 가린 부분 가림</span><span class="w">중앙 붕괴율이 0.25~0.61을 오가 임계를 낮추면 이동과 구분이 안 됨.</span></div></li>
+    <li><span class="n">02</span><div><span class="h">어안을 손으로 밀면 화면이 휘며 움직임</span><span class="w">경보는 맞지만 유형이 대부분 ‘재배치’로 나옴.</span></div></li>
+    <li><span class="n">03</span><div><span class="h">새 사람 모델에서 렌즈 앞 손이 사람 박스로 잡힘</span><span class="w">광각 11클립 중 이동 2건이 클립 안에 확정되지 않음.</span></div></li>
+    <li><span class="n">04</span><div><span class="h">아직 찍지 못한 장면</span><span class="w">조명 끄기, 자리 이탈 · 복귀, 카메라 앞 통행, 어두운 가리개. 돌린 뒤 새 장면에 사람이 35% 이상 계속 잡히면 경보가 늦거나 나지 않음.</span></div></li>
+  </ol>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/visibility/">키포인트 가림(visibility) 학습 — 합성 가림에서 학습 라벨 오류까지</a>
+    <a href="/projects/par-reid/">PAR·ReID — 보행자 속성 · 사람 재식별 고도화</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>

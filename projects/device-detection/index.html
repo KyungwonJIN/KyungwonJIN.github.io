@@ -14,14 +14,16 @@
   <div class="wrap">
     <a class="brand" href="/">&larr; kwjin.dev</a>
     <nav class="navlinks" aria-label="다른 프로젝트">
-      <a href="/projects/sprint/">집중 스프린트</a>
-      <a href="/projects/xray/">X-ray 탐지</a>
-      <a href="/projects/par-reid/">PAR·ReID</a>
-      <a href="/projects/casino/">카지노 영상분석</a>
       <a href="/projects/mate/">MATE</a>
-      <a href="/projects/rect-input/">직사각 입력</a>
-      <a href="/projects/synth-data/">합성 데이터</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/visibility/">가림 학습</a>
+      <a href="/projects/par-reid/">PAR·ReID</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
       <a href="/projects/center/">Center</a>
+      <a href="/projects/tamper/">화면이동탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/synth-data/">합성 데이터</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
     </nav>
   </div>
 </header>
@@ -68,7 +70,7 @@
     <div class="stat">
       <span class="k">2m 원거리 mAP50</span>
       <span class="v">0.737 <em>→</em> 0.978</span>
-      <span class="d">광각 장거리 · Body Crop 2단계 검출</span>
+      <span class="d">광각 장거리 · 인물 크롭 재추론</span>
     </div>
     <div class="stat">
       <span class="k">Bezel mAP50</span>
@@ -159,7 +161,7 @@
     </div>
 
     <div class="block">
-      <h4><span class="bn">04 &mdash;</span> 소형 객체 — Body Crop 2단계 검출 <span class="when">2024 ~ 2026</span></h4>
+      <h4><span class="bn">04 &mdash;</span> 소형 객체 — 인물 크롭 재추론 <span class="when">2024 ~ 2026</span></h4>
       <div class="pab">
         <div><span class="tag">문제</span><p>광각 카메라 원거리에서는 촬영기기가 수 픽셀 크기로 축소돼, 원본 프레임 추론만으로는 구조적으로 미탐이 발생했습니다.</p></div>
         <div><span class="tag">접근</span><p>인물을 먼저 탐지하고 그 영역만 crop해 다시 추론하는 <b>2단계 구조</b>를 도입했습니다. crop 마진과 추론 입력 사이즈를 실험해 최적점(<b>마진 10~20 px · 입력 640</b>)을 도출했고, 거리별(1m / 1.5m / 2m)·<b>12기종</b> 데이터를 새로 수집해 학습했습니다.</p></div>
@@ -177,7 +179,7 @@
         </table>
       </div>
       <p style="margin-top:14px">
-        메인 페이지의 <a href="/#twostage">2단계 검출 다이어그램</a>에서 원본 추론과 crop 재추론의 픽셀 크기 차이를 그림으로 볼 수 있습니다.
+        메인 페이지의 <a href="/#twostage">크롭 재추론 다이어그램</a>에서 원본 추론과 크롭 재추론의 픽셀 크기 차이를 그림으로 볼 수 있습니다.
       </p>
     </div>
 
@@ -254,14 +256,16 @@
 <div class="wrap backrow">
   <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
   <div class="siblings">
-    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
-    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
-    <a href="/projects/par-reid/">PAR·ReID — 보행자 속성 · 사람 재식별 고도화</a>
-    <a href="/projects/casino/">카지노 영상분석</a>
     <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
-    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
-    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/visibility/">키포인트 가림(visibility) 학습 — 합성 가림에서 학습 라벨 오류까지</a>
+    <a href="/projects/par-reid/">PAR·ReID — 보행자 속성 · 사람 재식별 고도화</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
     <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+    <a href="/projects/tamper/">화면이동탐지 — 카메라 이동 · 가림 규칙 엔진</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
   </div>
 </div>
 
