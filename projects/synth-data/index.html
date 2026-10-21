@@ -68,7 +68,7 @@
     <dt>목표</dt>
     <dd>웹캠 앞에서 폰 · 카메라 · 태블릿을 든 사람 검출 — 드문 기종 · 파지 · 거리를 원하는 만큼</dd>
     <dt>도구</dt>
-    <dd>Three.js 한 페이지 스튜디오 + 헤드리스 브라우저 배치 생성(같은 시드면 같은 결과) · 깊이 조건 디퓨전 인페인팅</dd>
+    <dd>Three.js 한 페이지 스튜디오 + 헤드리스 브라우저 배치 생성(같은 시드면 같은 결과) · Qwen-Image + ControlNet Union(깊이 조건, 4스텝) · SAM · 오픈 VLM 검수</dd>
     <dt>자산</dt>
     <dd>공개 인체 28종(MIT) · 실내 HDRI(CC0) · 절차 생성 + 공개 3D 기기. 학습 금지 조항 · 비상업 라이선스 자산은 쓰지 않음</dd>
     <dt>출발점</dt>
@@ -109,13 +109,13 @@
     <li>
       <span class="n">05</span>
       <div><span class="h">실사화 — 깊이 조건 인페인팅 2단계</span>
-        <span class="w">RGB만 넣은 렌더→실사 변환은 세부가 깨져서 깊이 같은 구조 정보를 조건으로. 사람 → 기기(약하게) 순서, 배경은 그대로. 마스크 IoU · 렌즈 보임 · 없는 기기 생성 검사를 모두 통과한 장만 씀.</span></div>
-      <span class="m">검수 3종</span>
+        <span class="w">RGB만 넣은 변환은 세부가 깨져서 깊이를 조건으로. 후보 8종(FLUX.2 · SDXL · Cosmos-Transfer · CycleGAN-Turbo 등) 중 Qwen-Image + ControlNet(4스텝): 사람 사실감 최고, 장당 수 초, 실루엣(= 라벨) 유지, Apache-2.0이라 폐쇄망에서 돌림. FLUX.2는 품질 상한이 높지만 장당 수십 초라 제외. 사람 → 기기(약하게) 순서, 기기 · 렌즈부 · 배경은 얼려 둠.</span></div>
+      <span class="m">장당 수 초</span>
     </li>
     <li>
       <span class="n">06</span>
-      <div><span class="h">학습 · 비교 — 외관 효과만 떼어 보기</span>
-        <span class="w">실데이터에 섞어 학습. 같은 장의 렌더본과 실사화본을 짝지어 비교해 외관 효과만 분리하고, 시드 8회로 반복.</span></div>
+      <div><span class="h">검수 · 학습 · 비교 — 외관 효과만 떼어 보기</span>
+        <span class="w">장마다 자동 검수(SAM으로 전후 마스크 IoU, 렌더 원본 기준 상대 문턱 · 렌즈부 보존 · 없는 기기 0 · 오픈 VLM 판정)를 통과한 장만 실데이터에 섞음. 같은 장의 렌더본과 실사화본을 짝지어 외관 효과만 분리하고, 시드 8회로 반복.</span></div>
       <span class="m">짝 비교</span>
     </li>
   </ol>
@@ -131,7 +131,7 @@
     <li>
       <span class="n">01</span>
       <div><span class="h">실사화 품질은 올라왔다</span>
-        <span class="w">사람은 사진 수준, 기기는 재질 좋은 자산으로 바꾼 뒤 약한 세기로도 제품처럼 보임. 인체 자산만 바꿨는데 구조 보존 검사 통과율이 약 3배.</span></div>
+        <span class="w">사람은 사진 수준, 기기는 재질 좋은 자산으로 바꾼 뒤 약한 세기로도 제품처럼 보임. 인체 자산만 바꿨는데 구조 보존 검사 통과율이 약 3배. KID는 사실감 차이를 가리지 못해 오픈 VLM 판정을 보조 지표로 씀.</span></div>
       <span class="m">통과율 ×3</span>
     </li>
     <li>
@@ -143,7 +143,7 @@
     <li>
       <span class="n">03</span>
       <div><span class="h">렌더만 넣으면 조금 해로웠다 — 원인은 사실감이 아니라 기하</span>
-        <span class="w">박스 기하와 구도를 실측 분포에 맞추자 해가 사라짐. 실사화로 얻는 추가 이득은 재현되지 않음.</span></div>
+        <span class="w">박스 기하와 구도를 실측 분포에 맞추자 해가 사라짐. 실사화로 얻는 추가 이득은 재현되지 않았고, 측정되는 효과는 태블릿 외관에 한정.</span></div>
     </li>
     <li>
       <span class="n">다음</span>
@@ -174,6 +174,16 @@
       <span class="n">03</span>
       <div><span class="h">배경이 한 가지 홈오피스로 수렴하고, ‘폰 없음’ 억제 문구가 오히려 없는 폰을 만듦</span>
         <span class="w">→ 배경은 그대로 두고 그 문구를 뺌.</span></div>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">손까지 얼리면 렌더 손이 그대로 남아 사실감이 막힘</span>
+        <span class="w">→ 얼리는 범위를 기기 + 렌즈부로 줄이고 손은 다시 그리게.</span></div>
+    </li>
+    <li>
+      <span class="n">05</span>
+      <div><span class="h">배경 속 작은 인물이 검은 실루엣으로 바뀜</span>
+        <span class="w">→ 프롬프트에 부가 인물의 수와 외형을 적어 해결.</span></div>
     </li>
   </ol>
   <p class="media-note">이 페이지의 숫자는 합성 데이터로 잰 것과 비교 설계(조합 · 시드 · 짝 수)만 적었습니다. 회사 데이터로 잰 성능 수치와 화면은 공개하지 않습니다.</p>
