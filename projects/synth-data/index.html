@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0F10">
+<meta name="robots" content="noindex">
+<title>웹캠 촬영기기 합성 데이터 · 진경원</title>
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+
+<a class="skip" href="#main">본문 바로가기</a>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">&larr; kwjin.dev</a>
+    <nav class="navlinks" aria-label="다른 프로젝트">
+      <a href="/projects/device-detection/">촬영기기 탐지</a>
+      <a href="/projects/sprint/">집중 스프린트</a>
+      <a href="/projects/xray/">X-ray 탐지</a>
+      <a href="/projects/casino/">카지노 영상분석</a>
+      <a href="/projects/mate/">MATE</a>
+      <a href="/projects/rect-input/">직사각 입력</a>
+      <a href="/projects/center/">Center</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="phero wrap">
+  <span class="eyebrow">프로젝트 · synth-data</span>
+  <h1 class="ptitle">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</h1>
+  <div class="pmeta">
+    <span>2026.10.16 ~ 10.20 · 5일 파일럿</span>
+    <span class="live">파일럿 완료 · 방향 결정 대기</span>
+  </div>
+
+  <p class="pitch">
+    폰을 든 웹캠 영상은 거의 없고, 있어도 얼굴이 섞여 모으기 어렵습니다. 그래서 장면을 3D로 만들고, 라벨은 기하에서 뽑고, 사람은 실사화해서 실데이터에 섞어 봤습니다.
+    결론은 <strong>사실감보다 박스 기하</strong> — 실사화의 추가 이득은 재현되지 않았고, 렌더의 해는 구도를 실측 분포에 맞추자 사라졌습니다.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="k">기간</span>
+      <span class="v">5<em> 일</em></span>
+      <span class="d">10.16 설계 → 10.20 파일럿 끝</span>
+    </div>
+    <div class="stat">
+      <span class="k">합성 조합</span>
+      <span class="v">16<em> 가지</em></span>
+      <span class="d">대부분 시드 8회 반복</span>
+    </div>
+    <div class="stat">
+      <span class="k">짝 비교</span>
+      <span class="v">30<em>여 쌍</em></span>
+      <span class="d">같은 장의 렌더본 ↔ 실사화본</span>
+    </div>
+    <div class="stat">
+      <span class="k">구조 보존 통과율</span>
+      <span class="v">×3</span>
+      <span class="d">인체 자산만 바꿔서(합성 데이터 기준)</span>
+    </div>
+  </div>
+
+  <dl class="factsheet">
+    <dt>목표</dt>
+    <dd>웹캠 앞에서 폰 · 카메라 · 태블릿을 든 사람 검출 — 드문 기종 · 파지 · 거리를 원하는 만큼</dd>
+    <dt>도구</dt>
+    <dd>Three.js 한 페이지 스튜디오 + 헤드리스 브라우저 배치 생성(같은 시드면 같은 결과) · 깊이 조건 디퓨전 인페인팅</dd>
+    <dt>자산</dt>
+    <dd>공개 인체 28종(MIT) · 실내 HDRI(CC0) · 절차 생성 + 공개 3D 기기. 학습 금지 조항 · 비상업 라이선스 자산은 쓰지 않음</dd>
+    <dt>출발점</dt>
+    <dd>카지노 과제의 테이블 시야 시뮬레이터에서 레이아웃 · 광학 프리셋을 재사용</dd>
+  </dl>
+</section>
+
+<!-- ================= 파이프라인 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">만드는 법</span>
+    <h2>여섯 단계, 단계마다 정한 것</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">장면 — 브라우저 한 페이지 스튜디오</span>
+        <span class="w">라벨 규약과 검수를 눈으로 바로 확정하려고 Blender 대신 Three.js로. 헤드리스로 배치 생성하고, 같은 시드면 바이트까지 같은 결과.</span></div>
+      <span class="m">재현 가능</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">사람 — 공개 인체 28종 · 파지 자세 8종</span>
+        <span class="w">처음 쓴 마네킹 자산에 ML 학습 금지 조항 → MIT 인체로 교체. 손 IK로 쥐는 자세를 만들고, 렌즈를 가리는 자세는 아예 만들지 않음.</span></div>
+      <span class="m">라이선스 확인</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">기기 — 평평한 상자에서 재질 있는 모델로</span>
+        <span class="w">절차 생성 기기와 공개 3D 모델을 섞어 유리 · 금속 · 카메라 섬 재질까지.</span></div>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">촬영 · 자동 라벨 — 라벨은 3D 기하에서</span>
+        <span class="w">실제 웹캠 화각 프리셋, 실내 실사 HDRI 배경. 인스턴스 ID 패스에서 박스 · 마스크 · 깊이를 뽑고, 폰은 후면 렌즈가 있는 상단 띠만 박스. 렌즈가 가려지거나 잘린 장은 통째로 빼고 웹캠 열화를 입힘.</span></div>
+      <span class="m">자동 라벨</span>
+    </li>
+    <li>
+      <span class="n">05</span>
+      <div><span class="h">실사화 — 깊이 조건 인페인팅 2단계</span>
+        <span class="w">RGB만 넣은 렌더→실사 변환은 세부가 깨져서 깊이 같은 구조 정보를 조건으로. 사람 → 기기(약하게) 순서, 배경은 그대로. 마스크 IoU · 렌즈 보임 · 없는 기기 생성 검사를 모두 통과한 장만 씀.</span></div>
+      <span class="m">검수 3종</span>
+    </li>
+    <li>
+      <span class="n">06</span>
+      <div><span class="h">학습 · 비교 — 외관 효과만 떼어 보기</span>
+        <span class="w">실데이터에 섞어 학습. 같은 장의 렌더본과 실사화본을 짝지어 비교해 외관 효과만 분리하고, 시드 8회로 반복.</span></div>
+      <span class="m">짝 비교</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 결과 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">결과</span>
+    <h2>사실감보다 박스 기하</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">실사화 품질은 올라왔다</span>
+        <span class="w">사람은 사진 수준, 기기는 재질 좋은 자산으로 바꾼 뒤 약한 세기로도 제품처럼 보임. 인체 자산만 바꿨는데 구조 보존 검사 통과율이 약 3배.</span></div>
+      <span class="m">통과율 ×3</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">실데이터만 쓴 기준을 유의하게 넘은 조합은 없었다</span>
+        <span class="w">실데이터가 적은 조건의 파일럿 — 합성 조합 16가지, 대부분 시드 8회, 짝 비교 30여 쌍.</span></div>
+      <span class="m">16조합 × 8시드</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">렌더만 넣으면 조금 해로웠다 — 원인은 사실감이 아니라 기하</span>
+        <span class="w">박스 기하와 구도를 실측 분포에 맞추자 해가 사라짐. 실사화로 얻는 추가 이득은 재현되지 않음.</span></div>
+    </li>
+    <li>
+      <span class="n">다음</span>
+      <div><span class="h">드문 장면만 따로 재기</span>
+        <span class="w">후보: 드문 장면 전용 평가, 실데이터가 더 적은 조건, 실제 웹캠 영상에서 기종만 바꾸는 영상 경로 — 방향 결정 대기.</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= 막힌 것 ================= -->
+<section class="sec wrap">
+  <div class="sechead">
+    <span class="eyebrow">시행착오</span>
+    <h2>막힌 것 → 바꾼 것</h2>
+  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">실사화가 마네킹 모양까지 그대로 따라 그림</span>
+        <span class="w">→ 사람 형태의 인체 자산으로 교체.</span></div>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">그대로 둔 기기가 평평한 판처럼 보임</span>
+        <span class="w">→ ‘픽셀 보존’을 ‘형상 보존 + 외관 재생성 + 사후 검수’로.</span></div>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">배경이 한 가지 홈오피스로 수렴하고, ‘폰 없음’ 억제 문구가 오히려 없는 폰을 만듦</span>
+        <span class="w">→ 배경은 그대로 두고 그 문구를 뺌.</span></div>
+    </li>
+  </ol>
+  <p class="media-note">이 페이지의 숫자는 합성 데이터로 잰 것과 비교 설계(조합 · 시드 · 짝 수)만 적었습니다. 회사 데이터로 잰 성능 수치와 화면은 공개하지 않습니다.</p>
+</section>
+
+</main>
+
+<div class="wrap backrow">
+  <a class="backlink" href="/"><span class="arw" aria-hidden="true">&larr;</span> 메인으로 돌아가기</a>
+  <div class="siblings">
+    <a href="/projects/device-detection/">영상보안 솔루션 촬영기기 탐지</a>
+    <a href="/projects/sprint/">집중 스프린트 — 탐지 모델 라인 총점검</a>
+    <a href="/projects/xray/">X-ray 위해물품 탐지</a>
+    <a href="/projects/casino/">카지노 영상분석</a>
+    <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
+    <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+    <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span class="stackline">진경원 · Vision AI Engineer</span>
+    <span class="footmeta">
+      (주)시선에이아이 AI Lab · 2022.03 ~ 재직 중<br>
+      <a href="mailto:jinkw0325@gmail.com">jinkw0325@gmail.com</a>
+    </span>
+  </div>
+</footer>
+
+</html>

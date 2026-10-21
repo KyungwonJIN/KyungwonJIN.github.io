@@ -19,6 +19,7 @@
       <a href="/projects/casino/">카지노 영상분석</a>
       <a href="/projects/mate/">MATE</a>
       <a href="/projects/rect-input/">직사각 입력</a>
+      <a href="/projects/synth-data/">합성 데이터</a>
       <a href="/projects/center/">Center</a>
     </nav>
   </div>
@@ -201,6 +202,7 @@
         <li><span><b>라벨링</b> — 수작업 라벨링을 오토라벨링으로 대체. SAM2(비디오 트래킹) → Grounding DINO → Grounded-SAM2로 도구를 단계적으로 교체하며 처리 속도 <b>5배</b>를 확보했습니다.</span></li>
         <li><span><b>신규 라벨 구축</b> — 스마트폰 렌즈 위치처럼 새 라벨이 필요할 때는 소량만 직접 라벨링해 초기 모델을 만들고, 그 추론 결과를 검수·재학습하는 루프로 비용을 줄였습니다(렌즈 검출 mAP50 <b>66% → 98%</b>).</span></li>
         <li><span><b>평가</b> — 모든 모델 교체를 오탐율/미탐율 벤치마크로 검증합니다. 검증 점수와 실사용 성능이 어긋나면 모델이 아니라 데이터를 먼저 의심합니다 — 태블릿 검증셋의 <b>random split 데이터 누수</b>를 발견해 인물 단위 분리로 교정했습니다.</span></li>
+        <li><span><b>합성 데이터</b> — 폰을 든 웹캠 영상이 드물어, 3D 장면 생성 → 기하로 자동 라벨 → 깊이 조건 실사화 → 실데이터에 섞는 파일럿을 5일 동안 돌렸습니다(2026.10). <a href="/projects/synth-data/">자세히</a></span></li>
         <li><span><b>신모델 추적</b> — YOLOv8~v26, YOLOv12, mamba-yolo, RF-DETR, DEIM을 출시 직후 직접 학습·벤치마크해 정확도 · 속도 · 엣지 호환성 기준으로 채택/보류를 판단합니다.</span></li>
       </ul>
     </div>
@@ -256,6 +258,7 @@
     <a href="/projects/casino/">카지노 영상분석</a>
     <a href="/projects/mate/">MATE — 데이터 엔진 워크벤치</a>
     <a href="/projects/rect-input/">비정사각 입력으로 CPU 연산 40% 절감</a>
+    <a href="/projects/synth-data/">웹캠 촬영기기 합성 데이터 — 시뮬레이터에서 실사화까지</a>
     <a href="/projects/center/">Center — AI 코딩 에이전트 지휘 보드</a>
   </div>
 </div>
