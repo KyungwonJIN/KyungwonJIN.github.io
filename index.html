@@ -118,7 +118,7 @@
     </a>
     <a class="prow" href="/projects/par-reid/">
       <span class="pn">04</span>
-      <span class="pt">CCTV 사람 재식별 · 보행자 속성 고도화</span>
+      <span class="pt">PAR·ReID — 보행자 속성 · 사람 재식별</span>
       <span class="pm">Duke mAP 81.9 → 87.1 · Market 91.6 → 92.8</span>
       <span class="ps now">배포 검토 · 2026.08 —</span>
     </a>
@@ -348,7 +348,7 @@
         <li>YOLO v8 ~ v26</li>
         <li>RT-DETR, DEIM, RF-DETR</li>
         <li>YOLO-Pose / Keypoint</li>
-        <li>ReID · PAR (Perception Encoder, CLIP-ReID)</li>
+        <li>PAR · ReID (Perception Encoder, CLIP-ReID)</li>
         <li>Grounding DINO, SAM2</li>
         <li>Python, PyTorch</li>
       </ul>
@@ -455,7 +455,7 @@
     { w: "2026.09", now: false, l: "/projects/rect-input/", t: "비정사각 입력 포즈 검출기 경량화", d: "16:9 웹캠용 YOLO11n 포즈 모델을 640×384 직사각 입력으로 재학습(커스텀 트레이너), 연산량 6.79→4.07 GFLOPs·CPU INT8 지연 −40%, AP50 손실 0.0065 이내" },
     { w: "2026.08 ~ 진행 중", now: true, l: "/projects/center/", t: "Center — AI 코딩 에이전트 지휘 보드 (개인 프로젝트)", d: "Claude Code·Codex 세션 10여 개를 한 화면에서 보고 지시하는 웹앱 1인 개발 — 처리함·사람만 누르는 승인 카드·세션 간 협업 API·자동 절전, 3주간 지시 444건·사람이 누른 승인 75건" },
     { w: "2026.08 ~ 진행 중", now: true, l: "/projects/mate/", t: "MATE — 데이터 엔진 워크벤치", d: "데이터셋 관리·라벨링·검수·학습 제출을 한 도구로 묶은 ML 데이터 워크벤치 1인 개발(폐쇄망 GPU 클러스터 배포·매일 사용), 웹 수집(하드 네거티브 포함) → 다중 엔진 합의 오토라벨 사이클로 약 6만 장 규모에서 예외 16%→약 1%, 사람이 직접 본 장은 약 4%" },
-    { w: "2026.08 ~ 진행 중", now: true, l: "/projects/par-reid/", t: "CCTV 사람 재식별(ReID)·보행자 속성(PAR) 고도화 (단독 인수)", d: "Apache-2.0 백본(Perception Encoder) 전환, 카메라 간 군집 의사 라벨, 판정 기준 사전 등록·누출 차단으로 ReID DukeMTMC mAP 81.9→87.1·Market 91.6→92.8, PAR 공개 4종 mA 86.0→87.6, ONNX 추론 ReID 약 1.5배·PAR 약 2배 빠름. 배포 검토 중" },
+    { w: "2026.08 ~ 진행 중", now: true, l: "/projects/par-reid/", t: "PAR·ReID — 보행자 속성 인식·사람 재식별 고도화 (단독 인수)", d: "Apache-2.0 백본(Perception Encoder) 전환, 카메라 간 군집 의사 라벨, 판정 기준 사전 등록·누출 차단으로 ReID DukeMTMC mAP 81.9→87.1·Market 91.6→92.8, PAR 공개 4종 mA 86.0→87.6, ONNX 추론 ReID 약 1.5배·PAR 약 2배 빠름. 배포 검토 중" },
     { w: "2026.07", now: false, l: "/projects/sprint/", t: "집중 스프린트 — 모델 라인 총점검", d: "후보 74종 비교로 웹캠 모델 세대교체(mAP50 0.834→0.955), 태블릿 2차 검증기 배포, VLM 활용성 평가, 3년 모델 자산 감사" },
     { w: "2026.04 ~ 진행 중", now: true, l: "/projects/xray/", t: "X-ray 위해물품 탐지", d: "73개 클래스·28만 장 단독 인수. 9-view 데이터 누수 발견 후 scene 단위 재분할, late fusion으로 오경보율 2.18%→1.68%" },
     { w: "2026.04 ~ 진행 중", now: true, t: "전면 카메라 탐지 (합성 데이터)", d: "얼굴 keypoint 기반 촬영버튼 합성 데이터 설계, 오탐 주원인이 TTA임을 규명·제거로 성능 개선" },
