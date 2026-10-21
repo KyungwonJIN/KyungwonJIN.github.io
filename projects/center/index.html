@@ -36,162 +36,136 @@
   </div>
 
   <p class="pitch">
-    Claude Code · Codex 같은 AI 코딩 에이전트 세션 10여 개를 동시에 돌리면서,
-    <strong>어느 세션이 무엇을 하고 어느 세션이 사람의 답을 기다리는지</strong>를 한 화면에서 보고 지시하려고 만든 웹앱입니다.
-    클릭 한 번으로 세션을 다시 여는 런처에서 시작해 웹 터미널 타일 뷰를 거쳐 지휘 보드로 키웠습니다.
+    Claude Code · Codex 세션 10여 개를 한 화면에서 굴리는 지휘 보드.
+    <strong>사람이 판단할 일만 사람에게 올라오고</strong>, 나머지는 세션끼리 묻고 맡깁니다.
   </p>
 
-  <dl class="factsheet">
-    <dt>기간</dt>
-    <dd>2026.08.26 런처 → 08.27 타일 뷰 → 09.30 지휘 보드 → 진행 중</dd>
-    <dt>형태</dt>
-    <dd>Windows · WSL에서 도는 로컬 웹앱 — Python 표준 라이브러리 백엔드(약 5,500줄, API 약 50개), 보드와 대화창 두 화면, tmux로 세션 유지</dd>
-    <dt>역할</dt>
-    <dd>1인 개발 — 설계, 백엔드 · 프런트 구현, Windows 설치기</dd>
-    <dt>기술</dt>
-    <dd>Python · tmux · WSL · 웹 터미널 · Slurm 연동 · 데스크톱 알림</dd>
-  </dl>
+  <figure class="shot heroshot">
+    <a href="/assets/center/chat.webp" title="원본 크기로 보기"><img src="/assets/center/chat.webp" width="1600" height="1000" decoding="async" fetchpriority="high"
+      alt="Center 대화창. 웹 대시보드 세션이 다크 모드 토글을 넣고 테스트한 뒤, 코드 리뷰 세션에 검토를 요청해 받은 답과 배포 승인 요청을 올린 기록이 보이고, 위쪽에 승인 요청과 답을 기다리는 질문 띠가 있다"></a>
+    <figcaption><b>지시 하나가 흘러가는 모습</b>“리뷰 받고 배포까지” → 세션이 코드 리뷰 세션에 검토를 부탁하고(협업 API) → 배포는 승인 카드로 사람에게 넘깁니다. 위쪽 띠에 승인 요청과 답을 기다리는 질문이 모입니다. 운영과 분리한 시험판에서 데모 세션(모델 호출 없음)으로 찍었습니다.</figcaption>
+  </figure>
 
-  <div class="stats three">
+  <div class="stats">
     <div class="stat">
-      <span class="k">세션</span>
-      <span class="v">77<em> 개</em></span>
-      <span class="d">지휘 보드 첫 14일(09.30 ~ 10.13)에 만든 세션</span>
+      <span class="k">지시</span>
+      <span class="v">444<em> 건</em></span>
+      <span class="d">대화창에서 보낸 지시 · 대장 경유 186</span>
     </div>
     <div class="stat">
-      <span class="k">지시 전달</span>
-      <span class="v">845<em> 건</em></span>
-      <span class="d">총괄 세션을 거친 지시 113건은 전부 처리</span>
+      <span class="k">세션 간 협업</span>
+      <span class="v">62<em> 건</em></span>
+      <span class="d">검토 · 위임 요청</span>
     </div>
     <div class="stat">
       <span class="k">승인 카드</span>
-      <span class="v">67<em> 건</em></span>
-      <span class="d">그중 사람이 직접 누른 응답 54건</span>
+      <span class="v">98<em> 건</em></span>
+      <span class="d">사람이 직접 누른 승인 75</span>
+    </div>
+    <div class="stat">
+      <span class="k">관리 중 세션</span>
+      <span class="v">15<em> 개</em></span>
+      <span class="d">2026.10.21 기준</span>
     </div>
   </div>
+  <p class="media-note">숫자는 지휘 보드를 연 2026.09.30부터 10.21까지 3주.</p>
+
+  <dl class="factsheet">
+    <dt>흐름</dt>
+    <dd>08.26 런처 → 08.27 웹 터미널 타일 뷰 → 09.30 지휘 보드 → 10.02 승인 카드 → 10.16 자동 절전 → 진행 중</dd>
+    <dt>형태</dt>
+    <dd>Windows · WSL 로컬 웹앱, tmux로 세션 유지, 보드와 대화창 두 화면</dd>
+    <dt>규모</dt>
+    <dd>백엔드 Python 약 7,600줄(표준 라이브러리) · 화면 약 3,600줄 · API 약 75개 (10.21)</dd>
+    <dt>역할</dt>
+    <dd>1인 개발 — 설계 · 구현 · Windows 설치기</dd>
+  </dl>
 </section>
 
-<!-- ================= 문제 정의 ================= -->
+<!-- ================= 핵심 ================= -->
 <section class="sec wrap">
   <div class="sechead">
-    <span class="eyebrow">배경</span>
-    <h2>세션이 열 개를 넘으면 생기는 일</h2>
-    <p class="lede">
-      에이전트 하나는 터미널 하나로 충분했지만, 업무 · 실험 · 측정을 나눠 동시에 돌리자
-      <strong>사람이 병목</strong>이 됐습니다.
-    </p>
+    <span class="eyebrow">핵심</span>
+    <h2>세션이 열 개를 넘으면 사람이 병목 — 그래서 정한 다섯 가지</h2>
   </div>
-
-  <div class="blocks">
-    <div class="block">
-      <h4><span class="bn">01 &mdash;</span> 무엇이 불편했나</h4>
-      <ul class="blist">
-        <li><span><b>누가 기다리는지 모름</b> — 어느 세션이 권한 승인이나 선택을 기다리는지 일일이 창을 돌며 확인해야 했습니다.</span></li>
-        <li><span><b>무엇을 하는지 모름</b> — 세션마다 지금 하는 일과 언제 멈췄는지를 알기 어려웠습니다.</span></li>
-        <li><span><b>다시 열기가 번거로움</b> — 창을 닫거나 재부팅하면 세션 ID를 찾아 붙여 다시 열어야 했습니다.</span></li>
-      </ul>
-    </div>
-  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">01</span>
+      <div><span class="h">사람이 할 일만 위로 올린다</span>
+        <span class="w">터미널 화면에서 권한 · 선택 질문을 감지해 처리함과 데스크톱 알림으로. 창을 돌며 누가 기다리는지 찾지 않는다.</span></div>
+      <span class="m">처리함 · 알림</span>
+    </li>
+    <li>
+      <span class="n">02</span>
+      <div><span class="h">승인은 사람이 누른 클릭만</span>
+        <span class="w">삭제 · 배포 · 재시작은 승인 카드로. 스크립트 · 자동화 응답은 ‘시험 응답’으로 따로 기록해, 에이전트가 스스로 승인한 것처럼 꾸밀 수 없다.</span></div>
+      <span class="m">98건 중 <em>사람</em> 75</span>
+    </li>
+    <li>
+      <span class="n">03</span>
+      <div><span class="h">세션끼리 묻고 맡기되, 서로 기다리다 멈추지 않게</span>
+        <span class="w">의견만 구하는 검토와 일을 맡기는 위임을 나눈 협업 API. 상대당 동시 1건, 상대가 내 답을 기다리는 중이면 새 요청은 바로 거절, 시간 제한.</span></div>
+      <span class="m">협업 62건</span>
+    </li>
+    <li>
+      <span class="n">04</span>
+      <div><span class="h">위험한 입력은 보내기 전에 막는다</span>
+        <span class="w">로그인 · 권한 우회 명령과 한 글자 키는 전송 불가, 다른 세션의 권한 질문에 대신 답하기 금지. 자원마다 주인을 정해, 주인 아닌 세션에 일을 맡기면 경고.</span></div>
+      <span class="m">주인 표</span>
+    </li>
+    <li>
+      <span class="n">05</span>
+      <div><span class="h">메모리가 빠듯해도 세션을 여러 개</span>
+        <span class="w">오래 쉰 세션은 대화를 남긴 채 절전, 말을 걸면 깨워서 전달. 작업 중이거나 예약이 걸린 세션은 끄지 않는다. 재부팅해도 이어서 복구.</span></div>
+      <span class="m">관리 중 15개</span>
+    </li>
+  </ol>
 </section>
 
-<!-- ================= 본문 ================= -->
+<!-- ================= 실사용 ================= -->
 <section class="sec wrap">
   <div class="sechead">
-    <span class="eyebrow">작업</span>
-    <h2>기능 → 설계 결정 → 개선 이력</h2>
+    <span class="eyebrow">실사용</span>
+    <h2>터진 것 → 막은 것</h2>
   </div>
-
-  <div class="blocks">
-
-    <div class="block">
-      <h4><span class="bn">02 &mdash;</span> 주요 기능</h4>
-      <ul class="blist">
-        <li><span><b>세션 보드</b> — 카테고리별 픽셀 캐릭터가 상태(작업 중 · 대기 · 입력 필요 · 꺼짐)를 표정으로 보여 줍니다. 여러 개를 골라 한꺼번에 지시 · 이동 · 종료합니다.</span></li>
-        <li><span><b>처리함</b> — 터미널 화면에서 권한 · 선택 · 폴더 신뢰 · 턴 끝 질문을 감지해 버튼으로 답하게 하고, 데스크톱 알림을 띄웁니다.</span></li>
-        <li><span><b>총괄 세션 · 지시함</b> — 총괄 에이전트가 사용자 지시를 담당 세션에 전달하고, 연결이 끊기면 경고합니다.</span></li>
-        <li><span><b>세션 간 협업 API</b> — 의견만 구하는 검토와 일을 맡기는 위임을 나누고, 공용 자원은 주인 세션 하나만 바꿀 수 있게 했습니다.</span></li>
-        <li><span><b>지식 증류 · 주입</b> — 세션을 닫기 전에 인수인계 카드로 증류하고, 새 세션을 열 때 골라 넣습니다.</span></li>
-        <li><span><b>운영</b> — 재부팅 후 세션 복구, 자동 재기동 감시, GPU 잡(Slurm) 배지, 메모리 막대와 정리 추천, 사용량 대시보드, 원격 서버(ssh) 세션.</span></li>
-        <li><span><b>배포</b> — Windows 원클릭 설치기(11단계, 업데이트 모드). 배포판을 빌드할 때 개인정보 · 내부 주소 금지어를 검사합니다.</span></li>
-      </ul>
-    </div>
-
-    <div class="block">
-      <h4><span class="bn">03 &mdash;</span> 설계 결정 3가지</h4>
-
-      <p><b>① 위험한 동작은 사람이 누른 응답만 승인으로 인정</b></p>
-      <div class="pab" style="margin-top:10px">
-        <div><span class="tag">결정</span><p>삭제 · 배포 · 재시작이 필요하면 세션이 <b>승인 카드</b>를 올리고, 사람이 보드에서 직접 누른 응답만 승인으로 받습니다. 스크립트나 다른 세션이 대신 누른 응답은 승인으로 치지 않습니다.</p></div>
-        <div><span class="tag r">이유</span><p>에이전트가 여러 개일수록 "누군가 허락했겠지"라는 착각이 생기기 쉽습니다. 승인 출처를 기록에 남겨 구분했습니다.</p></div>
-      </div>
-
-      <p style="margin-top:22px"><b>② 바깥에서 들어온 글은 사람이 확인한 뒤에만 규칙으로</b></p>
-      <div class="pab" style="margin-top:10px">
-        <div><span class="tag">결정</span><p>웹에서 가져온 내용으로 만든 규칙 카드는 사람이 승인해야 다른 세션에 주입됩니다.</p></div>
-        <div><span class="tag r">이유</span><p>증류 · 주입 경로가 그대로 프롬프트 주입 경로가 될 수 있어서입니다.</p></div>
-      </div>
-
-      <p style="margin-top:22px"><b>③ 서로 기다리다 멈추지 않게</b></p>
-      <div class="pab" style="margin-top:10px">
-        <div><span class="tag">결정</span><p>A가 B에게 묻는 동안 B가 A에게 보낸 요청이 남아 있으면 새 요청을 즉시 돌려보내고, 알림만 필요한 요청은 답을 기다리지 않게 했습니다.</p></div>
-        <div><span class="tag r">이유</span><p>세션끼리 서로의 답을 기다리면 둘 다 시간 초과로 끝나는 교착이 실제로 생겼습니다.</p></div>
-      </div>
-    </div>
-
-    <div class="block">
-      <h4><span class="bn">04 &mdash;</span> 날짜별 개선</h4>
-      <ul class="blist">
-        <li><span><b>08.26</b> — 클릭 한 번 세션 재실행 런처</span></li>
-        <li><span><b>08.27</b> — 웹 터미널 타일 뷰</span></li>
-        <li><span><b>09.14</b> — Codex 세션 지원</span></li>
-        <li><span><b>09.18</b> — 세션 증류 → 지식 카드 주입</span></li>
-        <li><span><b>09.24</b> — tmux와 원격 제어로 세션 유지</span></li>
-        <li><span><b>09.30</b> — 지휘 보드: 처리함 · 사용량 · 복구 · Slurm · 예약</span></li>
-        <li><span><b>10.01</b> — 여러 엔진 · 협업 API · 대화창 · 자동 재기동</span></li>
-        <li><span><b>10.02</b> — 승인 카드 · 교착 방지</span></li>
-        <li><span><b>10.07</b> — Windows 설치기 · 가이드</span></li>
-        <li><span><b>10.08</b> — 다중 선택 · 메모리 막대 · 배포판과 운영 코드 통일 · 원격 세션</span></li>
-        <li><span><b>10.13</b> — 중복 실행 방지</span></li>
-      </ul>
-    </div>
-
-    <div class="block">
-      <h4><span class="bn">05 &mdash;</span> 쓰면서 나온 숫자 <span class="when">2026.09.30 ~ 10.13 · 14일</span></h4>
-      <ul class="blist">
-        <li><span><b>세션 77개</b> — 업무 21 · 측정 실험 47 · 시험 9</span></li>
-        <li><span><b>지시 전달 845건</b> — 총괄 세션을 거친 지시 113건은 전부 처리</span></li>
-        <li><span><b>승인 카드 67건</b> — 사람이 직접 누른 응답 54건</span></li>
-        <li><span><b>동시 작업 세션</b> — 평상시 최대 8개</span></li>
-      </ul>
-    </div>
-
-  </div>
+  <ol class="kp">
+    <li>
+      <span class="n">10.02</span>
+      <div><span class="h">두 세션이 서로의 답을 기다리다 둘 다 시간 초과</span>
+        <span class="w">→ 상대가 내 답을 기다리는 중이면 새 요청을 즉시 돌려보내고, 알림만 필요한 요청은 답을 기다리지 않게.</span></div>
+    </li>
+    <li>
+      <span class="n">10.16</span>
+      <div><span class="h">절전시킨 세션의 표시가 사라짐</span>
+        <span class="w">→ 끄는 몇 초 사이 화면들이 상태를 읽어 ‘살아 있음’으로 판단한 것. 끄는 동안 그 세션 기록을 잠그고, 끈 뒤 다시 확인.</span></div>
+    </li>
+    <li>
+      <span class="n">10.19</span>
+      <div><span class="h">대화창이 깜빡이고 스크롤이 위아래로 튐</span>
+        <span class="w">→ 측정으로 원인(다시 그릴 때 화면 밖 높이를 잊는 브라우저 최적화 설정)을 찾아 CSS 한 줄을 빼서 해결.</span></div>
+    </li>
+  </ol>
 </section>
 
 <!-- ================= MEDIA ================= -->
 <section class="sec wrap">
   <div class="sechead">
     <span class="eyebrow">화면</span>
-    <h2>화면</h2>
-    <p class="lede">업무 세션이 보이지 않도록 운영 중인 Center와 분리한 시험판(별도 홈 폴더 · tmux · 포트)에 데모 세션 6개만 띄워 촬영했습니다. 데모 세션은 Claude Code 화면 모양만 흉내 내고 모델은 부르지 않습니다.</p>
+    <h2>보드와 승인 카드</h2>
   </div>
   <div class="media">
-    <figure class="shot wide">
+    <figure class="shot">
       <a href="/assets/center/board.webp" title="원본 크기로 보기"><img src="/assets/center/board.webp" width="1600" height="1000" loading="lazy" decoding="async"
         alt="Center 세션 보드. 대장 아래 데이터 · 실험 · 개발 · 문서 카테고리가 있고, 세션마다 픽셀 캐릭터와 작업 중 · 입력 필요 · 대기 · 꺼짐 상태, 지금 하는 일이 보인다"></a>
-      <figcaption><b>세션 보드</b>카테고리마다 세션이 캐릭터로 서 있고, 표정과 아이콘으로 작업 중 · 입력 필요(!) · 대기(z) · 꺼짐이 구분됩니다. 위에는 승인 요청과 처리할 질문 수, 왼쪽 아래에는 메모리 막대, 아래에는 카테고리별 사용량이 붙습니다.</figcaption>
+      <figcaption><b>세션 보드</b>카테고리별 캐릭터의 표정 · 아이콘으로 작업 중 · 입력 필요(!) · 대기(z) · 꺼짐을 한눈에.</figcaption>
     </figure>
     <figure class="shot">
       <a href="/assets/center/approval.webp" title="원본 크기로 보기"><img src="/assets/center/approval.webp" width="1600" height="804" loading="lazy" decoding="async"
         alt="Center 승인 카드. 웹 대시보드 세션이 올린 ‘배포: 웹 대시보드 새 버전 올리기’ 요청에 배포와 보류 선택지가 있다"></a>
-      <figcaption><b>승인 카드</b>세션이 배포 승인을 요청하면 카드로 뜹니다. 사람이 이 카드에서 직접 누른 응답만 승인으로 세션에 전달됩니다.</figcaption>
-    </figure>
-    <figure class="shot">
-      <a href="/assets/center/chat.webp" title="원본 크기로 보기"><img src="/assets/center/chat.webp" width="1600" height="1000" loading="lazy" decoding="async"
-        alt="Center 대화창. 왼쪽에 축소 보드와 메모리 막대, 가운데에 웹 대시보드 세션의 대화와 펼친 도구 실행 내역, 위에 승인 요청과 답을 기다리는 질문 띠가 있다"></a>
-      <figcaption><b>대화창</b>왼쪽 보드에서 캐릭터를 누르면 그 세션의 대화가 열리고, 입력칸에 쓰면 그 세션에 전달됩니다. 승인 요청과 답을 기다리는 질문은 위쪽 띠로 모입니다.</figcaption>
+      <figcaption><b>승인 카드</b>세션이 올린 배포 요청. 여기서 사람이 직접 누른 응답만 승인으로 전달됩니다.</figcaption>
     </figure>
   </div>
+  <p class="media-note">세 화면 모두 업무 세션이 보이지 않게 운영 중인 Center와 분리한 시험판(별도 홈 폴더 · tmux · 포트)에서, Claude Code 화면 모양만 흉내 내는 데모 세션으로 찍었습니다.</p>
 </section>
 
 </main>

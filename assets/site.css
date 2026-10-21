@@ -606,3 +606,23 @@ main{scroll-margin-top:60px}
 
 /* 6) 한글은 어절 단위로 줄바꿈(단어 중간 끊김 방지), 넘치는 긴 토큰만 강제로 끊는다 */
 body{word-break:keep-all;overflow-wrap:break-word}
+
+/* ============ 2026-10-21 핵심 포인트 목록(.kp) — 줄글 대신 한 줄 제목 + 한 줄 근거 ============ */
+.kp{display:grid;margin:0;padding:0;list-style:none;border-top:1px solid var(--line-strong)}
+.kp > li{
+  display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:4px 16px;align-items:baseline;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.kp .n{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.04em;color:var(--accent)}
+.kp .h{display:block;color:var(--bright);font-weight:700;font-size:1.0625rem;line-height:1.45;text-wrap:balance}
+.kp .w{display:block;margin-top:4px;color:var(--ink-2);font-size:.9375rem;line-height:1.7;text-wrap:pretty}
+.kp .m{
+  font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:.8125rem;letter-spacing:.02em;
+  color:var(--ink);white-space:nowrap;text-align:right;
+}
+.kp .m em{font-style:normal;color:var(--ink-3)}
+@media (max-width:640px){
+  .kp > li{grid-template-columns:40px minmax(0,1fr);gap:2px 12px}
+  .kp .m{grid-column:2;text-align:left;margin-top:6px}
+}
+.heroshot{margin-top:clamp(24px,4vw,34px)}
